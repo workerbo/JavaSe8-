@@ -575,7 +575,7 @@ public abstract class AbstractQueuedSynchronizer
      */
     static final long spinForTimeoutThreshold = 1000L;
 
-    /**
+    /**1. 处理当前同步队列尾节点为null时进行入队操作；2. 如果CAS尾插入节点失败后负责自旋进行尝试
      * Inserts node into queue, initializing if necessary. See picture above.
      * @param node the node to insert
      * @return node's predecessor
@@ -598,7 +598,7 @@ public abstract class AbstractQueuedSynchronizer
 
     /**
      * Creates and enqueues node for current thread and given mode.
-     *
+     *  获取同步状态失败，入队操作
      * @param mode Node.EXCLUSIVE for exclusive, Node.SHARED for shared
      * @return the new node
      */
@@ -608,6 +608,7 @@ public abstract class AbstractQueuedSynchronizer
         Node pred = tail;
         if (pred != null) {
             node.prev = pred;
+            //CAS成功后就更新了尾节点
             if (compareAndSetTail(pred, node)) {
                 pred.next = node;
                 return node;
@@ -834,6 +835,7 @@ public abstract class AbstractQueuedSynchronizer
      */
     private final boolean parkAndCheckInterrupt() {
         LockSupport.park(this);
+        //判断当前线程是否中断,且清除标志。
         return Thread.interrupted();
     }
 
@@ -859,8 +861,10 @@ public abstract class AbstractQueuedSynchronizer
         try {
             boolean interrupted = false;
             for (;;) {
+                //在循环中等待获取锁
                 final Node p = node.predecessor();
                 if (p == head && tryAcquire(arg)) {
+                    //node指向的当前线程获得锁，node变成头结点
                     setHead(node);
                     p.next = null; // help GC
                     failed = false;
@@ -868,6 +872,7 @@ public abstract class AbstractQueuedSynchronizer
                 }
                 if (shouldParkAfterFailedAcquire(p, node) &&
                     parkAndCheckInterrupt())
+                    //如果被中断了在外部重新标识上中断标识
                     interrupted = true;
             }
         } finally {
@@ -898,6 +903,7 @@ public abstract class AbstractQueuedSynchronizer
                     throw new InterruptedException();
             }
         } finally {
+            //线程响应中断处理
             if (failed)
                 cancelAcquire(node);
         }
@@ -1197,6 +1203,7 @@ public abstract class AbstractQueuedSynchronizer
     public final void acquire(int arg) {
         if (!tryAcquire(arg) &&
             acquireQueued(addWaiter(Node.EXCLUSIVE), arg))
+            //设置中断标识供获取锁之后处理
             selfInterrupt();
     }
 
