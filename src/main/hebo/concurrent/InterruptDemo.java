@@ -13,9 +13,10 @@ public class InterruptDemo {
         final Thread sleepThread = new Thread() {
             @Override
             public void run() {
-                //Thread的静态方法 interrupted（）主动对当前线程进行中断操作，该方法会清除中断标志位
+                //判断当前线程是否中断,且清除标志。
                 //Thread.interrupted();
                 try {
+
                     Thread.sleep(1000);
 
                 } catch (InterruptedException e) {
@@ -37,6 +38,7 @@ public class InterruptDemo {
             @Override
             public void run() {
                 //中断后也会一直运行
+
                 while (true){
                     System.out.println("busyThread");
                 }
@@ -48,6 +50,7 @@ public class InterruptDemo {
         //进行了中断操作,
         sleepThread.interrupt();
         busyThread.interrupt();
+
         while (sleepThread.isInterrupted()) ;
         //调用 isInterrupted（）来感知
         System.out.println("sleepThread isInterrupted: " + sleepThread.isInterrupted());

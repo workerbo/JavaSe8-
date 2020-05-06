@@ -64,7 +64,7 @@ package java.util.concurrent;
  * Note however, that there is no guarantee that a particular timeout
  * implementation will be able to notice the passage of time at the
  * same granularity as the given {@code TimeUnit}.
- *
+ *给定单元粒度的时间段，它提供在这些单元中进行跨单元转换和执行计时及延迟操作的实用工具方法。
  * @since 1.5
  * @author Doug Lea
  */
@@ -380,7 +380,7 @@ public enum TimeUnit {
      * @throws InterruptedException if interrupted while sleeping
      */
     public void sleep(long timeout) throws InterruptedException {
-        if (timeout > 0) {
+            if (timeout > 0) {
             long ms = toMillis(timeout);
             int ns = excessNanos(timeout, ms);
             Thread.sleep(ms, ns);

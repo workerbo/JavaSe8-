@@ -108,13 +108,14 @@ public class ArrayBlockingQueue<E> extends AbstractQueue<E>
      */
 
     /** Main lock guarding all access */
-    final ReentrantLock lock;
+    final ReentrantLock lock;//保证线程安全
 
     /** Condition for waiting takes */
-    private final Condition notEmpty;
-
+    private final Condition notEmpty;//可阻塞式的插入删除数据
+    //获取数据的消费者线程被阻塞时会将该线程放置到 notEmpty 等待队列中
     /** Condition for waiting puts */
     private final Condition notFull;
+    //插入数据的生产者线程被阻塞时，会将该线程放置到 notFull 等待队列中
 
     /**
      * Shared state for currently active iterators, or null if there
@@ -302,7 +303,7 @@ public class ArrayBlockingQueue<E> extends AbstractQueue<E>
      * possible to do so immediately without exceeding the queue's capacity,
      * returning {@code true} upon success and throwing an
      * {@code IllegalStateException} if this queue is full.
-     *
+     *往队列插入数据，当队列满时，插入元素时会抛出 IllegalStateException 异常；
      * @param e the element to add
      * @return {@code true} (as specified by {@link Collection#add})
      * @throws IllegalStateException if this queue is full
@@ -318,7 +319,7 @@ public class ArrayBlockingQueue<E> extends AbstractQueue<E>
      * returning {@code true} upon success and {@code false} if this queue
      * is full.  This method is generally preferable to method {@link #add},
      * which can fail to insert an element only by throwing an exception.
-     *
+     *当往队列插入数据时，插入成功返回true，否则则返回false。当队列满时不会抛出异常；
      * @throws NullPointerException if the specified element is null
      */
     public boolean offer(E e) {
@@ -361,7 +362,8 @@ public class ArrayBlockingQueue<E> extends AbstractQueue<E>
      * Inserts the specified element at the tail of this queue, waiting
      * up to the specified wait time for space to become available if
      * the queue is full.
-     *
+     *若阻塞队列已经满时，同样会阻塞插入数据的线程，直至阻塞队列已经有空余的地方，与 put 方法不同的是，
+     * 该方法会有一个超时时间，若超过当前给定的超时时间，插入数据的线程会退出；
      * @throws InterruptedException {@inheritDoc}
      * @throws NullPointerException {@inheritDoc}
      */

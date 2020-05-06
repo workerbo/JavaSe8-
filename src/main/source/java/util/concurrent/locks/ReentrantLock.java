@@ -129,12 +129,13 @@ public class ReentrantLock implements Lock, java.io.Serializable {
         final boolean nonfairTryAcquire(int acquires) {
             final Thread current = Thread.currentThread();
             int c = getState();
+            ////1. 如果该锁未被任何线程占有，该锁能被当前线程获取
             if (c == 0) {
                 if (compareAndSetState(0, acquires)) {
                     setExclusiveOwnerThread(current);
                     return true;
                 }
-            }
+            }//2.若被占有，检查占有线程是否是当前线程
             else if (current == getExclusiveOwnerThread()) {
                 int nextc = c + acquires;
                 if (nextc < 0) // overflow
@@ -146,14 +147,17 @@ public class ReentrantLock implements Lock, java.io.Serializable {
         }
 
         protected final boolean tryRelease(int releases) {
+            //1. 同步状态减1
             int c = getState() - releases;
             if (Thread.currentThread() != getExclusiveOwnerThread())
                 throw new IllegalMonitorStateException();
             boolean free = false;
             if (c == 0) {
+                //2. 只有当同步状态为0时，锁成功被释放，返回true
                 free = true;
                 setExclusiveOwnerThread(null);
             }
+            // 3. 锁未被完全释放，返回false
             setState(c);
             return free;
         }

@@ -279,6 +279,9 @@ class Thread implements Runnable {
      * concurrency control constructs such as the ones in the
      * {@link java.util.concurrent.locks} package.
      */
+    //调用yield方法并不会让线程进入阻塞状态，而是让线程重回就绪状态
+    //yield不能控制具体的交出CPU的时间，另外，
+    // yield方法只能让拥有相同优先级的线程有获取CPU执行时间的机会。
     public static native void yield();
 
     /**
@@ -728,7 +731,7 @@ class Thread implements Runnable {
         }
     }
 
-    private native void start0();
+    private native void start0();//开始线程
 
     /**
      * If this thread was constructed using a separate
@@ -1000,7 +1003,7 @@ class Thread implements Runnable {
      * @return  <code>true</code> if this thread is alive;
      *          <code>false</code> otherwise.
      */
-    public final native boolean isAlive();
+    public final native boolean isAlive();//判断线程是否存活
 
     /**
      * Suspends this thread.
@@ -1751,7 +1754,7 @@ class Thread implements Runnable {
          * be waiting for other resources from the operating system
          * such as processor.
          */
-        RUNNABLE,
+        RUNNABLE,//RUNNABLE = 正在JVM中运行的（Running）+ 可能在等待操作系统级别的资源（Ready）
 
         /**
          * Thread state for a thread blocked waiting for a monitor lock.
@@ -1760,7 +1763,7 @@ class Thread implements Runnable {
          * reenter a synchronized block/method after calling
          * {@link Object#wait() Object.wait}.
          */
-        BLOCKED,
+        BLOCKED,//阻塞等待监视器锁。处于此状态的线程正在阻塞等待监视器锁，以进入一个同步块/方法，或者在执行完wait()方法后重入同步块/方法。
 
         /**
          * Thread state for a waiting thread.
@@ -1781,7 +1784,7 @@ class Thread implements Runnable {
          * that object. A thread that has called <tt>Thread.join()</tt>
          * is waiting for a specified thread to terminate.
          */
-        WAITING,
+        WAITING,// 一般在等待状态的线程在等待其它线程执行特殊操作，例如：等待另其它线程操作Object.notify()唤醒或者Object.notifyAll()唤醒所有。
 
         /**
          * Thread state for a waiting thread with a specified waiting time.
@@ -2041,10 +2044,10 @@ class Thread implements Runnable {
     int threadLocalRandomSecondarySeed;
 
     /* Some private helper methods */
-    private native void setPriority0(int newPriority);
-    private native void stop0(Object o);
-    private native void suspend0();
-    private native void resume0();
-    private native void interrupt0();
+    private native void setPriority0(int newPriority);//设置线程优先级
+    private native void stop0(Object o);//停止线程
+    private native void suspend0();// 线程挂起(暂停)
+    private native void resume0();//将一个挂起线程复活继续执行
+    private native void interrupt0(); //该线程的中断状态将被设置
     private native void setNativeName(String name);
 }

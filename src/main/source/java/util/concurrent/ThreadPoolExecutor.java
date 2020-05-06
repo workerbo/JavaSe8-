@@ -1364,18 +1364,23 @@ public class ThreadPoolExecutor extends AbstractExecutorService {
          */
         int c = ctl.get();
         if (workerCountOf(c) < corePoolSize) {
+            // 如果线程数小于基本线程数，则创建线程并执行当前任务
             if (addWorker(command, true))
                 return;
             c = ctl.get();
         }
+        // 如线程数大于等于基本线程数或线程创建失败，则将当前任务放到工作队列中。
         if (isRunning(c) && workQueue.offer(command)) {
             int recheck = ctl.get();
+            // // 如果线程池不处于运行中或任务无法放入队列，
+            //        //并且当前线程数量小于最大允许的线程数量,则创建一个线程执行任务.
             if (! isRunning(recheck) && remove(command))
                 reject(command);
             else if (workerCountOf(recheck) == 0)
                 addWorker(null, false);
         }
         else if (!addWorker(command, false))
+            // 抛出RejectedExecutionException异常
             reject(command);
     }
 
