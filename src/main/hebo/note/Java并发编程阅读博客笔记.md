@@ -147,6 +147,8 @@
 
   JMM实现java正确的多线程编程对底层无数据依赖的指令重排序提供了上层约束（关键字和lock）；
 
+  cas保证了不会覆盖，volatile保证可见性。【避免脏读】
+
   
 
   volatile保证原子性，必须符合以下两条规则：
@@ -246,11 +248,48 @@
   当当前线程调用condition.await()方法后，会使得当前线程释放lock然后加入到等待队列中，直至被signal/signalAll后会使得当前线程从等待队列中移至到同步队列中去，直到获得了lock后才会从await方法返回，或者在等待时被中断会做中断处理
 
   
-  
+
+  # ConcurrentHashmap 
+
+  **利用了锁分段的思想提高了并发度**。
 
   ### 原子类
 
   getAndIncrement() 方法并不是原子操作。 只是保证了他和其他函数对 value 值得更新都是有效的
+
+  CAS 的问题1.ABA 问题2.自旋时间过长【非阻塞同步】
+
+  阻塞队列（`BlockingQueue`）是一个支持以下两个附加操作的队列：
+
+  - **支持阻塞的插入方法**：当队列满时，队列会阻塞插入元素的线程，直到队列不满。
+  - **支持阻塞的移除方法**：在队列为空时，获取元素的线程会等待队列变为非空。
+
+  
+
+  
+
+  # Executor框架
+
+  - 工作单元
+    - `Runnable`
+    - `Callable`
+  - 执行机制
+    - `Executor框架`
+
+- ##### 两级调度模型
+
+  HotSpot VM`的线程模型中，Java线程（`java.lang.Thread`）被 **一对一映射为本地操作系统线程**。
+
+  （`Executor框架`）将这些任务映射为固定数量的线程
+
+  `execute()`方法用于提交不需要返回值的任务
+
+  `submit()`方法用于提交需要返回值的任务
+
+  - 通常调用`shutdown`方法来关闭线程池。
+  - 如果任务不一定要执行完，则可以调用`shutdownNow`方法。
+
+- 在工作线程的run方法中循环执行阻塞队列中的任务。
 
   ## 其他
 
@@ -259,11 +298,12 @@
   阻塞：当一个线程试图获取对象锁（非java.util.concurrent库中的锁，即synchronized），而该锁被其他线程持有，则该线程进入阻塞状态。由JVM调度器来决定唤醒自己，而不需要由另一个线程来显式唤醒自己，不响应中断**。
   等待：当一个线程等待另一个线程通知调度器一个条件时，该线程进入等待状态。它的特点是**需要等待另一个线程显式地唤醒自己，实现灵活，语义更丰富，可响应中断**。例如调用：Object.wait()、Thread.join()以及等待Lock或Condition。
 
-  　　需要强调的是虽然synchronized和JUC里的Lock都实现锁的功能，但线程进入的状态是不一样的。**synchronized会让线程进入阻塞态，而JUC里的Lock是用LockSupport.park()/unpark()来实现阻塞/唤醒的，会让线程进入等待态**。但话又说回来，虽然等锁时进入的状态不一样，但被唤醒后又都进入runnable态，从行为效果来看又是一样的。
+  　　需要强调的是虽然synchronized和JUC里的Lock都实现锁的功能，但线程进入的状态是不一样的。**synchronized会让线程进入阻塞态，而JUC里的Lock是用LockSupport.park()/unpark()[同步队列和等待队列依赖其实现]来实现阻塞/唤醒的，会让线程进入等待态**。但话又说回来，虽然等锁时进入的状态不一样，但被唤醒后又都进入runnable态，从行为效果来看又是一样的。
 
 参考文档：
 
 1. [java并发图谱](https://www.processon.com/view/5ab5a979e4b0a248b0e026b3?fromnew=1#map)
 2. [并发系列文章](https://github.com/CL0610/Java-concurrency)
 3. [AQS详解](https://www.cnblogs.com/daydaynobug/p/6752837.html)
+4.https://zhuanlan.zhihu.com/p/86853461
 
