@@ -1,0 +1,33 @@
+
+
+> ###### idea问题集
+
+1. idea在debug模式启动非常慢,debug模式一直在启动中状态
+   取消所有打过的断点，问题解决
+2. IDEA 出现Cannot Download Sources的问题
+
+​       此时只需要在Terminal根目录下输入：mvn dependency:resolve -Dclassifier=sources
+
+
+
+> ###### IDEA功能
+
+1. IDEA 有个很牛逼的功能，那就是后缀补全（不是自动补全）。表达式.var if for for null nn return 
+2. 格式化代码  ctrl+alt  删除Ctrl+Y   自动补完分号  Ctrl+shift+enter
+
+一：
+shift+delete 永久删除
+win+L 锁定电脑
+
+alt+d 选中地址
+二，搜索引擎 关键字搜索
+6到8个精心挑选的词语，而且尽量用名词和具体对象
+双引号"包裹这些单词就能获得一个短语
+三个逻辑命令是AND, OR 以及 AND NOT（其后第一个单词）。
+搜索引擎的帮助文档以确认它接受哪种语法
+
+
+
+
+
+​    

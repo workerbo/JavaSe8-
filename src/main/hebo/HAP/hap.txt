@@ -1,0 +1,102 @@
+1.启动服务器，登录hap首页后，在浏览器上访问代码生成器url：http://XX/generator/generator.html
+将XX替换成本地访问端口目录
+2.	@NotNull：非空验证。用于时间、日期、基本数据类型对应包装类（Long、Integer等）的非空验证
+	@NotEmpty：非空验证，用除用于时间、日期、基本数据类型对应包装类之外的数据类型的非空验证
+	@DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")：日期格式化转换。是Spring框架自带的，用于格式化转换前台传来的日期。
+3.dto中一般使用包装类。可以为空，无默认值。
+4.同时，service接口也常常继承 ProxySelf接 口，只有继承该接口，service实现类才能实现自我调用，注意这里的泛型参数是接口类
+本身，而不是dto类；
+5.@Transactional：在service类前加上@Transactional，声明这个service所有方法需要事务管理。
+每一个业务方法开始时都会打开一个事务。更详细介绍请参考：http://robinsoncrusoe.iteye.com/blog/825531
+6.<@spring.message "hap.new"/>是hap框架定义的描述字段
+7.在事件回调函数中调用其他组件的方法（例如按钮组搭配Grid）
+8.页面头上的几个按钮，与viewModel绑定 kendo.bind(CSS选择器，viewModel)。
+viewModel数据来源于id为Grid的kendoGrid表格对象；增加，保存，查询方法直接调用了Grid的方法；
+Grid的数据来源与变量dataSource绑定； 
+变量dataSource的增删改查通过url直接调用后台controller定义的方法；（把参数封装传递到后台！）
+9.定义viewModel  常见编辑器实现如日期（gist）  attributes: {style: "text-align:center"},
+                        format: "{0:yyyy-MM-dd}",
+                        editor: function (container, options) {
+                            var opts = {
+                                format: "yyyy-MM-dd"
+                            }
+                            $('<input name="' + options.field + '"/>')
+                                .appendTo(container)
+                                .kendoDatePicker(opts);
+                        }
+                    }
+                ],
+                editable: true
+
+10.回车查询：当query-form下的input元素按下回车时执行查询；
+11.可以模糊查询，因为我们在dto类定义时加上了like的注解。
+12.多语言的实现需要基于_B结尾的基表和_TL结尾的多语言表。dto并添加多语言注解。修改html  
+editor: function (container, options) {
+        $('<input name="' + options.field + '"/>')
+            .appendTo(container)
+            .kendoTLEdit({
+                idField: 'salesId',
+                field: 'shopName',
+                dto: "com.hand.hap.test06.dto.CuxSalesHeader",
+                model: options.model
+            });
+    }
+13.LOV输入框  建个存放店铺信息的表作为lov基表
+定义LOV后绑定。自定义SQL 输入的参数用#{}封装，括号里面的名称与查询字段名称保持一致，字段名称需使用驼峰命名方法
+<script>
+    $("#shop_name_query").kendoLov($.extend(${lovProvider.getLov(base.contextPath, base.locale, "LOV_CUXSHOP")}, {}));
+</script>
+样式：将input和span里面的向左浮动的代码（标黄）删除即可；
+LOV带出多个值。
+editor: function (container, options) {
+    $('<input name="' + options.field + '"/>')
+        .appendTo(container)
+        .kendoLov($.extend(<@lov "LOV_CUXSHOP"/>,{
+        model    : options.model,
+        textField: 'shopNum',
+        select: function(e) {
+            options.model.set('shopName', e.item.shopName);
+            options.model.set('shopNum', e.item.shopNum);
+        }
+    }));
+
+}
+14.Kendo UI每一个界面都需要手写html原生界面，因此这里的editWin也需要建立同名的一个div元素；
+{
+    attributes: {style: "text-align:center"},
+    title: '<@spring.message "hap.edit"/>',
+    command: [{
+        name: 'edit',
+        template: '<a href="javascript:void(0)" class="k-grid-edit"><@spring.message "hap.edit"/></a>',
+        click: function (e) {
+
+            var data = this.dataItem($(e.target).closest("tr"));
+            if (!data.salesId)  return;
+    
+            var onClose = function () {
+                $("#editWin").empty();
+            }
+    
+            $("#editWin").kendoWindow({
+                actions: ["Close"],
+                title: $l('hap.edit'),
+                draggable: true, 
+                height: "400px",
+                width: "600px",
+                close: onClose,
+                content: "${base.contextPath}/test06/cux_sales_line.html?salesId=" + data.salesId + "&isedit=1",
+                iframe: true,
+                modal: true
+            });
+            var win = $("#editWin").data("kendoWindow");
+            win.center().open();
+            e.preventDefault();
+        }
+    }], width: 70
+}
+15.添加保存按钮代码，保存行时直接调用grid上的保存方法，保存头是通过hap调用url
+将viewModel.model（已经与界面字段绑定）传递到后台保存；如果成功保存，则关闭编辑界面
+16.Hap学习地址
+地址：https://haasgz.hand-china.com:30243/svn/开发中心/知识库/技术文档/HAP
+账号/密码：GZTC_USER / 300170to20 
+

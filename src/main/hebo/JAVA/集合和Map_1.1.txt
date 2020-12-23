@@ -1,0 +1,139 @@
+
+笔记参考博客：https://www.cnblogs.com/lijingran/category/1195711.html
+
+
+实现Comparable接口
+在类里面提供比较算法
+Collections.sort就有足够的信息进行排序了，也无需额外提供比较器Comparator
+
+Collection是 Set List Queue和 Deque的接口
+
+
+Set中的元素
+
+重复判断标准是:
+如果hashcode相同，再比较equals，如果equals相同，则是相同数据，否则是不同数据
+如果hashcode不一样，就是在不同的坑里，一定是不重复的
+如果hashcode一样，就是在同一个坑里，还需要进行equals比较
+如果equals一样，则是重复数据
+如果equals不一样，则是不同数据。
+HashSet是作为Map的key而存在的
+
+HashSet自身并没有独立的实现，而是在里面封装了一个Map.
+HashSet是作为Map的key而存在的
+而value是一个命名为PRESENT的static的Object对象，因为是一个类属性
+
+HashSet： 无序
+LinkedHashSet： 按照插入顺序
+TreeSet： 从小到大排序
+
+
+遍历HashMap几种方式
+entrySet  keySet
+HashMap和Hashtable都实现了Map接口，都是键值对保存数据的方式
+区别1：
+HashMap可以存放 null。所以当有其它线程改变了HashMap的结构（增加或者移除元素），将会抛出ConcurrentModificationException，但迭代器本身的remove()方法移除元素则不会抛出。
+Hashtable不能存放null
+区别2：
+HashMap不是线程安全的类 可以用 Collections的synchronizedMap方法使HashMap具有同步的能力，或者使用ConcurrentHashMap（它是HashTable的替代）。
+Hashtable是线程安全的类
+
+LinkedHashMap 是HashMap的一个子类，保存了记录的插入顺序。遍历速度只和实际数据有关，和容量无关
+如果您要按自然顺序或自定义顺序遍历键，那么TreeMap会更好
+
+ArrayList
+容器的容量"capacity"会随着对象的增加，自动增长
+add 有两种用法
+第一种是直接add对象，把对象加在最后面
+第二种是在指定位置加对象
+indexOf与contains一样，判断标准是对象是否相同、
+remove
+set用于替换指定位置的元素
+toArray可以把一个ArrayList对象转换为数组。
+clear 清空一个ArrayList
+
+
+除了实现了List接口外，LinkedList还实现了双向链表结构Deque，可以很方便的在头尾 插入 查看 删除 数据
+addLast
+addFirst
+getFirst
+removeLas
+LinkedList 除了实现了List和Deque外，还实现了Queue接口(队列)。
+Queue是先进先出队列 FIFO，常用方法：
+offer 在最后添加元素
+poll 取出第一个元素
+peek 查看第一个元素
+
+
+查找符合条件的对象：
+List的做法是对每一个进行挨个遍历
+HashMap比如要查找annie，首先计算"annie"的hashcode是1008，根据1008这个下标，到数组中进行定位，发现1008这个位置有两个英雄，那么就对两个英雄的名字进行逐一比较(equals)，因为此时需要比较的量就已经少很多了，很快也就可以找出目标英雄
+
+顺序表，链表，哈希表，二叉树
+
+1、List ，List<?> 与 List<Object> 有区别吗？
+List<Object>是集合类型的一种
+List 变量可以接受任何泛型的变量
+List<?> 是一个泛型，在没有赋值之前，是可以接受任何集合的赋值的
+
+2、List<? extends T> a ,可以把 a 及其 a 的子类赋给 a，从 a 里取的元素都会被强制转换为 T 类型，不过需要注意的是，不能向 a 添加任何除 null 外是元素。
+3、List<? super T> a ,可以把 a 及其 a 的父类赋给 a，从 a 里取的元素都会被强制转换为 Object 类型，不过需要注意的是，可以向 a 添加元素，但添加的只能是 T 及其子类元素。
+实际上在 Java 的泛型中，泛型只存在于源码中，在编译后的字节码中，泛型已经被替换为原生类型了，并且在相应的地方插入了强制转换的代码。
+
+1.数组转换为集合
+这个返回的 ArrayList 实际上是 Arrays 的一个内部类。该内部类也是十分简单，和真实的那个 ArrayList 没得比。而且这个假的 ArrayList 是直接 引用原数组的。
+List<String> list = new ArrayList<>(Arrays.asList(arr));
+2、集合转数组
+
+
+
+
+
+
+
+同步集合与并发集合
+ hashmap 是非同步的，故在多线程中是线程不安全的，不过也可以使用 同步类来进行包装:
+ 包装类Collections.synchronizedMap（）和Collections.synchronizedList（）提供了一个基本的有条件的线程安全的Map和List实现。
+
+   ConcurrentHashMap引入了分段的概念，所以它只有一部分被锁定才能提供线程安全性. 
+总而言之，ConcurrentHashMap仅锁定Map的某些部分，而Hashtable在执行迭代时锁定完整映射。 
+
+Iterator【单独的线程和索引表】 在工作的时候是不允许被迭代的对象被改变的。但你可以使用 Iterator 本身的方法 remove() 来删除对象，Iterator.remove() 方法会在删除当前迭代对象的同时维护索引的一致性。
+
+Java 子类实现父类已经实现的接口：反射时得到是当前类实现的接口。
+HashSet只是对HashMap的封装。LinkedHashMap继承自HashMap
+Set<Map.Entry> 是map的一个视图，通过entry迭代器实现遍历
+增强for循环也是迭代器（语法糖）
+
+LinkedList容器通过维护一个双链表存放数据。【考虑空链，头或者尾】
+
+
+hashtable和vector都要默认长度【初始化时】，其他的是在add时扩容【之前是空数组】。
+map一般扩容两倍，ArrayList扩容1.5倍，vector判断增加因子
+
+ LinkedHashMap = HashMap + list。LinkedHashMap能按照插入的顺序给你输出，即一种Linked的状态
+
+hashmap
+ // (n - 1) & hash的作用是获取hash桶对应的下标（table数组），效果等同于 hash % n(n 是 tab数组的长度)，
+    	// 这是由于n 是 2 的次幂，这也是为什么table的容量（长度）必须初始化为2 的次幂，简化求余操作
+    	// 根据前面判断知oldCap <= 0，此时时调用了HashMap的带参构造器，初始容量用threshold替换，
+        //在带参构造器中，threshold的值为 tableSizeFor() 的返回值，也就是2的幂，而不是 capacity * load factor
+        newCap = oldThr;
+
+由于进行rehash操作，则key对应的hash需要重新计算，hash对应的下标也要重新计算？
+
+  TreeMap与hash无关，只是用一棵红黑树保存key-value，所以不存在table数组、hash桶、扩容什么的。
+
+
+map是用于存储key-value的虚拟容器，按照key的hash值将节点散列到一个table数组（也称hash表）的table[i]（也称hash桶）中。等你看完TreeMap的底层数据结构就会发现，不通过key.hash值，也可以实现map容器。
+
+HashMap、LinkedHashMap、Hashtable、ConcurrentHashMap这四个都是通过table数组，并结合hash散列存放节点，前两者不支持并发读写，效率较高，后两者支持并发，并且ConcurrentHashMap的效率更高些。TreeMap容器通过红黑树存储key-value节点，节点按照key的大小排序，查找、插入比较高效，时间复杂度在O(log2n)级别。
+
+
+HashSet集合是完全无序的（内部根据元素的hash值进行散列），LinkedHashSet是插入顺序，TreeSet是元素自身大小顺序。
+
+
+
+
+并发的HashMap为什么会引起死循环
+https://blog.csdn.net/zhuqiuhui/article/details/51849692?utm_medium=distribute.pc_relevant.none-task-blog-OPENSEARCH-4&depth_1-utm_source=distribute.pc_relevant.none-task-blog-OPENSEARCH-4
