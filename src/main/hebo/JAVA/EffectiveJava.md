@@ -119,6 +119,52 @@ enum PayrollDay {
 
 ###### 泛型
 
+泛型的继承关系：可以把`ArrayList`向上转型为`List`（`T`不能变！），但不能把`ArrayList<Integer>`向上转型为`ArrayList<Number>`（`T`不能变成父类）。
+
+Java使用擦拭法实现泛型，导致了：
+
+- 编译器把类型<T>`视为`Object`；
+- 编译器根据``实现安全的强制转型。
+- 局限一：``不能是基本类型，例如`int`，因为实际类型是`Object`，`Object`类型无法持有基本类型：
+- 局限二：无法取得带泛型的`Class`
+- 不能判断带泛型类型的类型，例如：`x instanceof Pair`；
+- 不能实例化`T`类型，例如：`new T()`。
+
+我们无法获取`Pair`的`T`类型，即给定一个变量`Pair p`，无法从`p`中获取到`Integer`类型。
+
+但是，在父类是泛型类型的情况下，编译器就必须把类型`T`（对`IntPair`来说，也就是`Integer`类型）保存到子类的class文件中，不然编译器就不知道`IntPair`只能存取`Integer`这种类型
+
+使用类似`<? extends Number>`通配符作为方法参数时表示：
+
+- 方法内部可以调用获取`Number`引用的方法，例如：`Number n = obj.getFirst();`；
+- 方法内部无法调用传入`Number`引用的方法（`null`除外），例如：`obj.setFirst(Number n);`。
+
+即一句话总结：使用`extends`通配符表示可以读，不能写。
+
+使用类似`<T extends Number>`定义泛型类时表示：
+
+- 泛型类型限定为`Number`以及`Number`的子类。
+
+
+
+因此，使用`<? super T>`通配符表示：
+
+- 允许调用`set(? super Integer)`方法传入`Integer`的引用；
+- 不允许调用`get()`方法获得`Integer`的引用。
+
+唯一例外是可以获取`Object`的引用：`Object o = p.getFirst()`
+
+``<? extends T>类型和`<? super T>`类型的区别在于：
+
+- ``允许调用读方法`T get()`获取`T`的引用，但不允许调用写方法`set(T)`传入`T`的引用（传入`null`除外）；
+- ``允许调用写方法`set(T)`传入`T`的引用，但不允许调用读方法`T get()`获取`T`的引用（获取`Object`除外）。
+
+
+
+实际泛型类型的类型变量的子类范围是否确定，super是确定了T及T的子类可以添加。
+
+可以声明带泛型的数组，但不能用`new`操作符创建带泛型的数组：必须通过强制转型实现带泛型的数组：在编译器进行类型检查
+
 使用泛型，你告诉编译器在每个集合中允许哪些类型的对 象。 编译器会自动插入强制转换【
 
 ​		这种检查基于编译而非运行，所以说是不可编译并非不可运行。编译后会擦除泛型信息】
@@ -161,6 +207,12 @@ PECS：含通配符泛型类型对象的引用赋值具体的泛型类型对象�
 ###### 注解
 
 @Repeatable 元注释来注释注释的声明
+
+new TypeReference<Map<String,StudentEntity>>(){}
+
+在运行期间，如果方法中出现带泛型的匿名内部类，那么泛型依旧会被保留下来，我们可以通过对应的方法获取到实际的泛型类型
+
+Type体系中类型的包括：原始类型(Class)、参数化类型(ParameterizedType)、泛型数组类型(GenericArrayType)、类型变量(TypeVariable)、基本类型(Class);
 
 ###### 集合
 

@@ -10,10 +10,4 @@ CSS
 
 在一条规则的分号前插入！important这样一个短语来标记一条重要规则【不被其他权重覆盖】，比如说：
 
-　
-
-```
-　P.apple {color:#red !important; background:white;}
-```
-
 样式权值相同时，后者获胜。

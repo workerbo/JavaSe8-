@@ -1,5 +1,15 @@
 狂神说reidis[笔记](https://blog.csdn.net/beiluol/category_10009893.html)
 
+数据库的数据和缓存的数据是不可能一致的，数据分为最终一致和强一致两类。
+
+强一致 不可以使用缓存
+
+缓存能做的只能保证数据的最终一致性。
+
+redis  过期   删除  淘汰
+
+[redis(五)-缓存三大问题及解决方案](https://blog.csdn.net/haoxin963/article/details/83245113)
+
 > ###### redis常用数据类型
 
 优势：内存读写、单线程【减少锁、上下文切换的开销】、IO复用【非阻塞IO、server轮询变成了事件通知】

@@ -1,0 +1,13 @@
+笔记参考博客：https://www.cnblogs.com/lijingran/p/8586281.html
+在代码中添加信息提供了一种形式化的方法，是我们可以在稍后 某个时刻方便地使用这些数据（通过 解析注解 来使用这些数据）
+1.生成文档。
+2.在编译时进行格式检查 @Override
+3..跟踪代码依赖性(配置)
+
+
+Spring5：@Autowired注解、@Resource注解和@Service注解 - IT·达人 - 博客园
+https://www.cnblogs.com/szlbm/p/5512931.html
+
+
+
+

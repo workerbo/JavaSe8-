@@ -1,0 +1,1 @@
+ [Xshell6提示“要继续使用此程序，您必须应用最新的更新或使用新版本”](https://blog.csdn.net/cao919/article/details/116280922?utm_medium=distribute.pc_relevant.none-task-blog-2~default~baidujs_baidulandingword~default-1.no_search_link&spm=1001.2101.3001.4242.2)

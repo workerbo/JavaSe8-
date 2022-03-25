@@ -1,0 +1,86 @@
+异常处理
+SpringMVC：  HandlerExceptionResolver接口，
+
+
+该接口的每个实现类 都是异常的一种处理方式：
+
+a.
+ExceptionHandlerExceptionResolver： 主要提供了@ExceptionHandler注解，并通过该注解处理异常
+
+	//该方法 可以捕获本类中  抛出的ArithmeticException异常
+	@ExceptionHandler({ArithmeticException.class,ArrayIndexOutOfBoundsException.class  })
+	public String handlerArithmeticException(Exception e) {
+		System.out.println(e +"============");
+		return "error" ;
+	}
+
+@ExceptionHandler标识的方法的参数 必须在异常类型(Throwable或其子类) ，不能包含其他类型的参数
+
+
+
+异常处理路径：最短优先  
+如果有方法抛出一个ArithmeticException异常，而该类中 有2个对应的异常处理法你发：
+
+@ExceptionHandler({Exception.class  })
+	public ModelAndView handlerArithmeticException2(Exception e) {}
+
+	@ExceptionHandler({ArithmeticException.class  })
+	public ModelAndView handlerArithmeticException1(Exception e) {}
+则优先级：  最短优先。
+
+
+
+
+@ExceptionHandler默认只能捕获 当前类中的异常方法。
+如果发生异常的方法  和处理异常的方法 不在同一个类中：@ControllerAdvice
+
+
+总结：如果一个方法用于处理异常，并且只处理当前类中的异常：@ExceptionHandler
+      如果一个方法用于处理异常，并且处理所有类中的异常： 类前加@ControllerAdvice、 处理异常的方法前加@ExceptionHandler
+
+
+
+b.
+ResponseStatusExceptionResolver：自定义异常显示页面 @ResponseStatus
+
+
+@ResponseStatus(value=HttpStatus.FORBIDDEN,reason="数组越界222!!!")
+public class MyArrayIndexOutofBoundsException extends Exception {//自定义异常
+
+}
+
+
+@ResponseStatus也可以标志在方法前：
+@RequestMapping("testMyException")
+	public String testMyException(@RequestParam("i") Integer i) throws MyArrayIndexOutofBoundsException {
+		if(i == 3) {
+			throw new MyArrayIndexOutofBoundsException();//抛出异常
+		}
+		return "success" ;
+	}
+	
+	@RequestMapping("testMyException2")
+	public String testMyException2(@RequestParam("i") Integer i) {
+		if(i == 3) {
+			return "redirect:testResponseStatus" ;//跳转到某一个 异常处理方法里
+		}
+		return "success" ;
+	}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

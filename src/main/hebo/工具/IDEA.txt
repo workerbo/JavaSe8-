@@ -8,7 +8,7 @@
 
 ​       此时只需要在Terminal根目录下输入：mvn dependency:resolve -Dclassifier=sources
 
-
+idea[乱码](https://blog.csdn.net/liqimo1799/article/details/81811153)
 
 > ###### IDEA功能
 

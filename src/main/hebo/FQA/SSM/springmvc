@@ -1,0 +1,62 @@
+如果现在想用springmvc，而不是普通的servlet，如何告知程序？-如何让springmvc 介入程序：
+通过以下配置，拦截所有请求，交给SpringMVC处理：
+
+```
+  <servlet>
+  	<servlet-name>springDispatcherServlet</servlet-name>
+  	<servlet-class>org.springframework.web.servlet.DispatcherServlet</servlet-class>
+  	<init-param>
+  			<param-name>contextConfigLocation</param-name>
+  			<param-value>classpath:springmvc.xml</param-value>
+  	</init-param>
+  	<load-on-startup>1</load-on-startup>
+  </servlet>
+
+  <servlet-mapping>
+  	<servlet-name>springDispatcherServlet</servlet-name>
+  	<url-pattern>/</url-pattern>
+  </servlet-mapping>
+
+其中：
+<url-pattern>.action</url-pattern>
+```
+
+/:一切请求  ，注意不是 /*
+/user:拦截以 /user开头的请求
+/user/abc.do  :只拦截该请求
+.action:只拦截 .action结尾的请求
+
+
+映射是 去匹配@RequestMapping注解，可以和方法名、类名不一致
+通过method指定 请求方式（get  post  delete put）
+  @RequestMapping(value="welcome",method=RequestMethod.POST)//映射
+
+
+设置name="xxxx"的情况：
+params= {"name2=zs","age!=23"}
+
+name2:必须有name="name2"参数
+
+age!=23 :    a.如果有name="age"，则age值不能是23
+       b.没有age
+!name2  ：不能name="name2"的属性
+ant风格的请求路径
+?  单字符
+*  任意个字符（0或多个）
+** 任意目录
+多个符合，最长匹配原则
+“/” 是用来定义default servlet映射的。
+@RequestMapping(value="welcome3/**/test")
+
+通过@PathVariable获取动态参数
+
+```
+@RequestMapping（value="/{name}"）
+public String  welcome5(@PathVariable("name") String name ) {
+  System.out.println(name);
+  return "success" ;
+}
+```
+
+
+

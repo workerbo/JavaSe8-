@@ -1,0 +1,66 @@
+Maven就是是专门为Java项目打造的管理和构建工具，它的主要功能有：
+
+- 提供了一套标准化的项目结构；
+- 提供了一套标准化的构建流程（编译，测试，打包，发布……）；
+- 提供了一套依赖管理机制。
+
+| scope    | 说明                                          | 示例            |
+| :------- | :-------------------------------------------- | :-------------- |
+| compile  | 编译时需要用到该jar包（默认）                 | commons-logging |
+| test     | 编译Test时需要用到该jar包                     | junit           |
+| runtime  | 编译时不需要，但运行时需要用到                | mysql           |
+| provided | 编译时需要用到，但运行时由JDK或某个服务器提供 | servlet-api     |
+
+Maven通过lifecycle、phase和goal来提供标准的构建流程。
+
+最常用的构建命令是指定phase，然后让Maven执行到指定的phase：
+
+- mvn clean
+- mvn clean compile
+- mvn clean test
+- mvn clean package
+
+通常情况，我们总是执行phase默认绑定的goal，因此不必指定goal。
+
+使用Maven，实际上就是配置好需要使用的插件，然后通过phase调用它们。
+
+maven插件
+插件目标与生命周期的绑定  直接执行插件的目标
+https://mp.weixin.qq.com/s?src=11&timestamp=1574942178&ver=2002&signature=6Cu-yIaS84vAtrCGEZHulq*v37UhHVuHMCIEHFTDH3nXy8EJaChpLY7L3izutwjDU8R*EPFdZK-yT8Lh7oWqsYkhetcRSN0Y3zLq9yWD81y8c1evLZfo4up5H1EDFJ*j&new=1
+
+maven同时打war包和jar包
+https://blog.csdn.net/liangweihua123/article/details/80972570
+
+maven overrly 的用法！  在src中同路径同名覆盖
+https://blog.csdn.net/qq_24874939/article/details/84534854
+
+内存溢出 是内存不够
+内存泄漏  内存不能回收
+栈溢出  递归太深
+
+
+idea maven Diragem 红线意思是冲突
+最短路径优先
+最先声明优先
+https://blog.csdn.net/noaman_wgs/article/details/81137893
+
+
+maven聚合工程  不同模块可以复用 二方库
+父工程打包方式pom
+继承与依赖
+需要安装
+
+用Maven打包FatJar?
+FatJar是什么？
+我们在写Java程序的时候可能会依赖其他的库，如果我们打包jar的时候能够将我们所依赖的jar包一起打包进来，那么用户就可以直接启动该jar包而不用考虑其他依赖问题，包含依赖的jar包就是fatjar。 	
+
+
+
+> ###### scope为import
+
+1. scope为import只能在dependencyManagement中使用，且type为pom类型。
+2. dependencyManagement里配置并不会实际引入，只是为了版本管理，实际引入需要直接在dependencies中添加。
+
+
+
+-Dfile.encoding=GBK   在IDEA的maven的Runner中配置防止控制台乱码

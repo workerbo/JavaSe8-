@@ -1,0 +1,140 @@
+ORACLE由 Oracle 数据库和 Oracle 实例(instance)构成(区别mysql,mysql没有实例的概念)
+实例（数据库服务）：多个后台进程和一个共享的
+任何时刻一个实例只能与一个数据库关联，访问一个数据库；而同一个数据库可由多个实例访问（RAC）
+SID即是INSTANCE_NAME
+
+
+参考  echo $ORACLE_SID  MyORCL
+     select name from V$database;   ORACLE
+show parameter service_name;       oracle
+
+注意设置NLS_LANG环境变量
+1.一个数据库可以创建多个用户。
+========= 11g R2创建数据库之DBCA静默方式
+通常创建Oracle数据库都是通过DBCA(Database Configuration Assistant)工具完成的，DBCA工具可以通过两种方式完成建库任务，
+即图形界面方式和静默命令行方式
+
+通过监听查看实例状态：
+ lsnrctl status
+ 通过sqlplus进行查询实例状态
+ 
+ 安装参考文档： 
+https://lipeng1667.github.io/2017/03/20/oracle-silence-install-in-rhel/#%E8%AE%BE%E7%BD%AE%E7%8E%AF%E5%A2%83%E5%8F%98%E9%87%8F
+======
+https://www.cnblogs.com/mchina/archive/2012/11/27/2782993.html
+https://blog.csdn.net/xiezuoyong/article/details/81327756
+用 oracle 用户登录系统，执行命令sqlplus / as sysdba，连接到数据库。
+数据库实例的启动过程
+https://www.cnblogs.com/fiberhome/p/7691503.html
+启动命令：startup
+
+关闭命令：shutdown
+
+启动监听器，在 linux 命令行下（不是在 sqlplus）执行lsnrctl start命令。
+
+
+oratab文件 如果在安装过程中环境参数设置正确会导致安装之后，找不到此文件。
+解决方法是使用root用户在oracle的安装目录 $ORALCE_HOME 下执行sh root.sh
+生成文件后手动编辑语句。
+
+
+
+select status from v$instance;
+select INSTANCE_NAME from v$instance;
+oracle日志文件
+/oracle/diag/rdbms/oracle/MyORCL
+
+
+ SID即INSTANCE_NAME是用来唯一标示实例的   MyORCL
+ SERVICE_NAME（“Global Database Name”）的该参数直接对应数据库   oracle
+ 域名  oracle 
+ 一般创建用户   schema
+https://blog.csdn.net/zhangzl1012/article/details/50752572
+总结：按步骤来
+慎用删除。备份一定要。
+注意每一步的提示信息。
+稳如老狗！！！
+
+
+Oracle客户端连接服务器配置
+https://blog.csdn.net/xusheng_mr/article/details/79162361
+
+tns
+https://www.cnblogs.com/mingjing/p/6500923.html
+
+
+
+===============
+查看序列
+select SYS_ROLE_FUNCTION_S.nextval from dual;
+select SYS_ROLE_FUNCTION_S.currval from dual;
+
+
+
+
+
+
+
+
+
+========用户，角色，权限
+  sqlplus命令行登录方法：登陆sys帐户:sqlplus / as sysdba    sqlplus /nolog    
+ 操作系统认证方式，当属于操作系统DBA组用户登陆到数据库服务器，那么Oracle认为这样的用户就可以授权以
+ SYSDBA身份登录数据库，这时的用户名和密码随便输什么，
+ 都能连上库，使用show user命令查看登陆用户，其实都是SYS用户。
+
+ ====常用命令
+ select status from v$instance;
+  show parameter control  看那控制文件位置
+  select NAME from v$datafile;  所有数据文件
+  select name from v$tempfile;  所有临时文件
+  select MEMBER from v$logfile; 所有日志文件
+
+  select username,default_tablespace from user_users; 查看当前用户的缺省表空间
+  select * from user_tables; 查看用户下所有的表
+  常见数据字典
+https://blog.csdn.net/weixin_34265814/article/details/91937631
+  spfile 动态控制文件（二进制）
+  pfile 静态控制文件
+  Oracle数据字典汇总 dictionary  dict-column 
+
+Oracle11g体系结构
+  https://blog.csdn.net/Alen_Liu_SZ/article/details/80062702
+
+控制文件错误！
+ show parameter control_files
+ORA-00205: error in identifying control file, check alert log for more info
+
+重建控制文件
+https://www.jb51.net/article/109493.htm
+
+如果没有指定连接描述符，则连接到系统环境变量ORACLE_SID所指定的数据库。
+如果没有设定ORACLE_SID，则连接到的数据库。
+
+
+
+
+
+====================基础语法点
+
+使用IN操作符进行多行子查询。（总结：IN操作符后可用多行子查询）
+
+比如：查询各个职位中工资最高的员工信息。
+SQL>select ename, job, sal from emp where sal in (select max(sal) from emp group by job);——单列子查询
+
+或
+
+SQL>select ename, job, sal from emp where (sal,job) in (select max(sal), job from emp group by job);——多列子查询
+
+
+引入exists的目的：在一些情况下，只需要子查询返回一个真值或是假值。如果只考虑是否满足判断条件，而数据本身并不重要，可以使用exists操作符来定义子查询。
+
+
+in有数据数量限制
+
+单行函数  多行函数（处理多行或者单行数据）
+隐式转换（数字《》字符串《》日期   在插入或者查询时）
+group进阶  roullup cube grouping group_sets
+
+
+

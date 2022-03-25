@@ -1,0 +1,1 @@
+ClassPathXmlApplicationContext【容器类型】

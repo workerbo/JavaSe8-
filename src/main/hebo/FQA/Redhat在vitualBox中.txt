@@ -1,0 +1,71 @@
+
+
+============在virtualBox上安装虚拟机并联网。
+1.
+操作系统 RedHat7
+jdk：8版本
+tomcat 8版本
+数据库： Oracle11.2.04
+2.虚拟机安装  操作系统安装（参考：https://blog.csdn.net/nbartchen/article/details/79571154）
+ 2.1网络配置（需要设置配置文件）
+  网络连接（网络地址转换(NAT) 。这样你的虚拟主机就可以访问外网了。）
+  主机和虚机互访（HOST-ONLY） 参考： https://blog.csdn.net/wang5990302/article/details/80282322
+
+
+  Linux中网络相关的主要的几个配置文件为：（参考：http://smilejay.com/2011/05/redhat-linux-network/）
+  /ect/hosts 配置主机名（域名）和IP地址的对应
+  /etc/sysconfig/network 配置主机名和网关
+  /etc/sysconfig/network-scripts/ifcfg-eth0 eth0配置文件，eth1则文件名为ifcfg-eth1，
+  以此类推/etc/resolv.conf配置DNS客户端（关于使用哪个DNS服务器的配置）
+               
+ 使用到的命令  IP addr  
+               systemctl restart network
+			  路径  /etc/sysconfig/network-scripts/ifcfg-enp0s3 
+
+  2.2https://blog.csdn.net/qq_25166683/article/details/83211617
+  只设置桥接模式
+3.宿主机通过xshell访问虚拟机。			  
+ 安装Redhat之后https://my.oschina.net/u/2615530/blog/1503562
+4.并设置yum源并安装软件
+RedHat7.5修改Yum源为CentOS：https://blog.csdn.net/qq_35180983/article/details/103977053
+ epel源：yum install epel-release 直接进行安装
+第三方源
+https://blog.csdn.net/watt1208/article/details/81868801
+============无网情况下设置yum源
+1.镜像
+2.RHEL 设置国内的yum源。
+
+			  
+==========安装好虚拟机、操作系统、互通、连上外网之后			  
+1.下载jdk  https://blog.csdn.net/sonnet123/article/details/9169741
+#cd /tmp
+wget --no-check-certificate --no-cookies --header "Cookie: oraclelicense=accept-securebackup-cookie" http://download.oracle.com/otn-pub/java/jdk/8u131-b11/d54c1d3a095b4ff2b6607d096fa80163/jdk-8u172-linux-x64.rpm
+
+或者官网下载RPM包。
+
+2.安装tomcat
+官网下载RPM包
+配置参考文档https://blog.csdn.net/m0_37681914/article/details/80154584
+
+3.安装Oracle  
+静默安装 静默配置监听 静默建库
+必读说明文档：http://www.zhoudl.com/dba/1003.htm
+软件下载参考地址：https://www.oracle.com/database/technologies/112010-linx8664soft.html
+安装参考文档   https://docs.oracle.com/cd/E11882_01/install.112/e24326/toc.htm#BABIBGFA
+DBname：oracle
+SID：MyORCL
+
+4.安装Git Maven
+https://www.cnblogs.com/freeweb/p/5241013.html
+https://www.jianshu.com/p/89a2917ff5c1
+5.安装GitLab
+root/Handhand135505
+6.扩展磁盘  
+		1.关闭虚拟机。
+		2.备份同样扩容。
+https://blog.csdn.net/wilson1068/article/details/88770409
+https://blog.csdn.net/xialingming/article/details/81291682
+https://blog.csdn.net/casilin/article/details/9035973
+
+记录：
+1.MYSQL docker启动后直接退出 。 内存不足

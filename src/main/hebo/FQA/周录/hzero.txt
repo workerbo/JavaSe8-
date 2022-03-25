@@ -1,0 +1,105 @@
+后端项目快速创建 [http://hzero.saas.hand-china.com/](http://hzero.saas.hand-china.com/)
+
+使用git clone 下载前端项目
+
+- git 相关命令如下
+
+    406 yarn --registry [http://nexus.saas.hand-china.com/content/groups/hzero-npm-group/](http://nexus.saas.hand-china.com/content/groups/hzero-npm-group/)
+    407 lerna bootstrap --registry [http://nexus.saas.hand-china.com/content/groups/](http://nexus.saas.hand-china.com/content/groups/) hzero-npm-group/
+    408 npm install --global lerna
+    410 yarn global add eslint
+
+    411 npm install -g hzero-front-cli --registry=http://nexus.saas.hand-china.com/content/groups/hzero-npm-group/
+    412 curl [http://nexus.saas.hand-china.com/content/groups/hzero-npm-group/](http://nexus.saas.hand-china.com/content/groups/hzero-npm-group/)
+    413 npm config get registry
+
+    414 npm install -g hzero-front-cli
+
+    429 cd hzero-front
+    430 yarn add hzero-front --registry=http://nexus.saas.hand-china.com/content/groups/hzero-npm-group/
+
+    yarn：每个命令都会更新package.json和yarn.lock 文件。 参见新手指南https://yarnpkg.com/zh-Hans/docs/getting-started
+
+
+hzero（企业中台系统：微服务应用开发平台）
+与paas、saas（多租户）对接
+产品研发-项目实施-即时交付的效率提升
+业务中台（业务产品服务）
+技术中台（基础服务）
+数据中台（数据分析和处理）
+能效中台（运营、运维）
+jps -ml 查看服务
+
+
+groovy 用于同步不同环境的数据库结构
+
+
+DDD模型
+https://www.cnblogs.com/netfocus/archive/2011/10/10/2204949.html
+敏捷式：小步迭代，周期性交付，那么获取客户的反馈也就比较频繁和及时
+DDD则不同：它像是更小粒度的迭代设计，它的最小单元是领域模型(Domain Model)
+Application Layer的service发起请求，而后Domain Layler从Infrastructure Layer获取领域对象，校验通过后会更新用户状态，最后再次通过Infratructure Layer持久化到数据库中。
+
+
+仓库
+仓库封装了获取对象的逻辑，领域对象无须和底层数据库交互。仓储里面存放的对象一定是聚合，原因是之前提到的领域模型中是以聚合的概念去划分边界的
+领域模型中我们定义仓储的接口，而在基础设施层实现具体的仓储，通过接口来隔离封装变化的做法其实很常见。由于客户面对的是抽象的接口并不是具体的实现，所以我们可以随时替换仓储的真实实现，这很有助于我们做单元测试。
+聚合被看作是多个模型单元间的组合，它定义了模型的关系和边界。每个聚合都有一个根，根是一个实体，并且是唯一可被外访问的。
+
+
+领域服务
+表示这种跨多个对象的操作，DDD认为服务是一个很自然的范式用来对应这种跨多个对象的操作，所以就有了领域服务这个模式
+引入领域服务可以有效的防治领域层的逻辑泄露到应用层
+服务（无状态）存在的目的就是为领域提供简单的方法。为了提供大量便捷的方法，自然要关联许多领域模型，所以说，行为(Action)天生就应该存在于服务中。
+不要随意放置服务,如果该行为是属于应用层的，那就应该放在那；如果它为领域模型服务，那它就应该存储在领域层中，要避免业务的服务直接操作数据库，最好通过DAO。
+
+实体与值对象
+实体就是领域中需要唯一标识的领域概念。因为我们有时需要区分是哪个实体
+值对象（不关心对象是哪个，而只关心对象是什么）另外一个明显的特征是不可变，即所有属性都是只读的。因为属性是只读的，所以可以被安全的共享；
+
+
+jwt
+    hzero-admin 平台治理服务（观察者模式）（刷新hzero-gateway 路由和权限）
+    数据库 多语言  i18n国际化
+
+认证登陆
+
+
+
+服务器本地安装：
+本地安装方式一般用于搭建开发环境，在服务器上部署好基础服务后，开发人员在本地只需关注自己的服务，进行API测试
+1：服务器基础环境搭建
+    数据库的变量应该提前设置
+    [mysqld]
+lower_case_table_names=1
+character-set-server=utf8
+[mysql]
+default-character-set = utf8
+[client]
+default-character-set=utf8
+
+2.mini   root/aa135505
+
+
+
+eureka：分为服务器端和客户端。服务注册后每隔30发送心跳并获得注册信息。
+ribbon:客户端（相对于被调用的微服务方）负载均衡。实现负载均衡，达到高可用目的。
+Feign：声明性Http请求（简化RestTemplate）。通过定义接口映射到其他服务的URL（@Feignclient）。在当前服务直接通过接口调用其他服务。
+Hystrix：避免服务雪崩，Http请求熔断和降级（有返回）
+zuul：提供统一入口、路由和过滤器（在消费者和调用者中间）
+
+前端
+yarn config set registry  http://nexus.saas.hand-china.com/content/groups/hzero-npm-group/  --global
+npm install -g cnpm  --registry=https://registry.npm.taobao.org
+yarn
+yarn config set registry https://registry.npm.taobao.org --global
+yarn config set disturl https://npm.taobao.org/dist --global
+
+npm i  caniuser-lite  -verbose
+
+
+1.数据库（mysql和Oracle概念 备份）
+2.消息 缓存 权限
+3.文档插件
+4.单点登陆   兼容插件测试
+5.代码优化（Excel部分）

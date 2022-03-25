@@ -1,3 +1,27 @@
+CommonController中处理下拉框数、常用描述维护和前端页面跳转。
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 1.启动服务器，登录hap首页后，在浏览器上访问代码生成器url：http://XX/generator/generator.html
 将XX替换成本地访问端口目录
 2.	@NotNull：非空验证。用于时间、日期、基本数据类型对应包装类（Long、Integer等）的非空验证

@@ -1,0 +1,314 @@
+selectKey用法！
+https://blog.csdn.net/xu1916659422/article/details/77921912
+
+
+
+###### 开发mybatis程序步骤：
+
+1.配置mybatis
+conf.xml:配置数据库信息 和 需要加载的映射文件
+映射文件xxMapper.xml  :增删改查标签<select>
+测试类：
+session.selectOne("需要查询的SQL的namespace.id","SQL的参数值");
+
+  b.#{}自动给String类型加上''  （自动类型转换）
+
+  ${} 原样输出，但是适合于 动态排序（动态字段）
+
+
+
+只要 是  <transactionManager type="JDBC" />，则增删改都需要手工commit ;和spring集成之后就托管给了spring，如果没有spring事务，则自动提交或者回滚。
+
+
+
+
+匹配的过程：（约定的过程）
+1.根据 接口名 找到 mapper.xml文件（根据的是namespace=接口全类名）
+2.根据 接口的方法名 找到 mapper.xml文件中的SQL标签 （方法名=SQL标签Id值）
+执行：
+		StudentMapper studentMapper = session.getMapper(StudentMapper.class) ;
+		studentMapper.方法();
+
+通过session对象获取接口（session.getMapper(接口.class);），再调用该接口中的方法，程序会自动执行该方法对应的SQL。
+
+
+
+###### 批量设置别名
+
+	<typeAliases>
+		<!-- 单个别名 （别名 忽略大小写） -->
+		<!-- <typeAlias type="org.lanqiao.entity.Student" alias="student"/> -->
+		<!--  批量定义别名  （别名 忽略大小写），以下会自动将该包中的所有类 批量定义别名： 别名就是类名（不带包名，忽略大小写）   -->
+		<package name="org.lanqiao.entity"/>
+	</typeAliases>
+	
+	类型处理器（类型转换器）
+
+
+###### 自定义MyBatis类型处理器
+
+	java -数据库(jdbc类型)
+
+
+###### 缓存
+
+​	一级缓存 ：同一个SqlSession对象，MyBatis默认开启一级缓存，如果用同样的SqlSession对象查询相同的数据，则只会在第一次 查询时 向数据库发送SQL语句，并将查询的结果 放入到SQLSESSION中（作为缓存在）；
+​	
+
+	二级缓存
+		MyBatis默认情况没有开启二级缓存，需要手工打开。
+		a.配置文件
+		<!-- 开启二级缓存 -->
+		<setting name="cacheEnabled" value="true"/>
+		b.在具体的mapper.xml中声明开启(studentMapper.xml中)
+			<mapper namespace="org.lanqiao.mapper.StudentMapper">
+	
+			<!-- 声明此namespace开启二级缓存 -->
+			<cache/>
+			根据异常提示：NotSerializableException可知，MyBatis的二级缓存 是将对象 放入硬盘文件中	
+				序列化：内存->硬盘
+				反序列化：硬盘->内存
+		准备缓存的对象，必须实现了序列化接口 （如果开启的缓存Namespace="org.lanqiao.mapper.StudentMapper"），可知序列化对象为Student，因此需要将Student序列化 （序列化Student类，以及Student的级联属性、和父类）
+	
+		触发将对象写入二级缓存的时机：SqlSession对象的close()方法。
+		Mybatis自带二级缓存：【同一个namespace】生成的mapper对象
+		禁用 ：select标签中useCache="false"
+		commit会清理一级和二级缓存；但是 清理二级缓存时，不能是查询自身的commit；
+	      b. 在select标签中 增加属性 flushCache="true"
+	
+	      要想整合三方提供的二级缓存 （或者自定义二级缓存），必须实现org.apache.ibatis.cache.Cache接口，该接口的默认实现类是PerpetualCache
+
+
+
+###### 输入参数
+
+输入对象为HashMap：用map中key的值 匹配 占位符#{stuAge}，如果匹配成功 就用map的value替换占位符
+
+如果报错： No enum constant org.apache.ibatis.type.JdbcType.xx，则说明mybatis不支持xx类型，需要查表。
+
+存储过程 无论输入参数是什么值，语法上都需要 用map来传递该值；
+
+如果输入参数 ：是简单类型（8个基本类型+String） 是可以使用任何占位符,#{xxxx}
+	       如果是对象类型，则必须是对象的属性 #{属性名}
+
+多个参数用@Param注解，否则在SQL中写param1，param2.
+
+###### 输出参数resultType
+
+1.简单类型（8个基本+String）
+2.输出参数为实体对象类型
+3.输出参数为实体对象类型的集合 ：虽然输出类型为集合，但是resultType依然写 集合的元素类型（resyltType="Student"）
+4.输出参数类型为HashMap
+	--HashMap本身是一个集合，可以存放多个元素，
+	  但是根据提示发现  返回值为HashMap时  ，查询的结果只能是1个学生（no,name）；
+-->结论：一个HashMap 对应一个学生的多个元素（多个属性）  【一个map，一个学生】
+
+二维数组
+{
+	{1,zs,23,xa},    -一个HashMap对象
+	{2,ls,24,bj}, 
+	{3,ww,25,tj}
+}
+
+
+resultType
+resultMap:实体类的属性、数据表的字段： 类型、名字不同时（stuno,id）
+注意：当属性名 和字段名 不一致时，除了使用resultMap以外，还可以使用resultType+HashMap:
+
+a.resultMap
+	<resultMap type="student" id="queryStudentByIdMap">
+			<!-- 指定类中的属性 和 表中的字段 对应关系 -->
+			<id property="stuNo"  column="id" />
+			<result property="stuName" column="name" />
+	</resultMap>
+	
+b.resultType+HashMap
+select  表的字段名 "类的属性名" from... 来制定字段名 和属性名的对应关系
+	<select id="queryStudentByIdWithHashMap" 	 parameterType="int"	resultType="student" >
+		select id "stuNo",name "stuName" from student where id = #{id}
+	</select>
+	
+注意:  如果如果10个字段，但发现 某一个字段结果始终为默认值（0，0.0，null），则可能是 表的字段  和 类的属性名字写错。
+
+//查询全部
+String statement = "select stuno,stuname from student";
+
+//根据年龄查询学生
+	
+String statement = "select stuno,stuname from student where stuage = #{stuage}"; 
+
+
+//根据姓名和年龄查询学生
+
+
+String statement = "select stuno,stuname from student where stuage = #{stuage} and stuage = #{stuage} "; 
+
+select stuno,stuname from student where  stuname = #{stuName}and  stuage = #{stuAge}
+
+
+
+
+
+select stuno,stuname,stuage from student <where> and stuname = #{stuName}  and  stuage = #{stuAge}
+
+<where>会自动处理第一个<if>标签中的 and，但不会处理之后<if>中的and
+
+
+
+
+
+<foreach>迭代的类型：数组、对象数组、集合、属性(Grade类： List<Integer> ids)
+
+
+
+简单类型的数组:
+无论编写代码时，传递的是什么参数名(stuNos)，在mapper.xml中 必须用array代替该数组
+
+集合：
+无论编写代码时，传递的是什么参数名(stuNos)，在mapper.xml中 必须用list代替该数组
+
+
+对象数组：
+Student[] students = {student0,student1,student2}  每个studentx包含一个学号属性
+注意的几点：
+	parameterType="Object[]" 
+	 	<foreach collection="array" open=" and  stuno in (" close=")" 
+	  		 		item="student" separator=",">   
+	  		 		#{student.stuNo}
+	  	</foreach>
+
+
+
+SQL片段：
+	java：方法
+	数据库：存储过程、存储函数
+	Mybatis :SQL片段 
+
+a.提取相似代码
+b.引用
+
+###### 关联查询：
+
+一对一:
+a.业务扩展类
+		核心：用resultType指定类的属性 包含 多表查询的所有字段
+	
+b.resultMap
+	i.通过 属性成员 将2个类建立起联系
+			
+
+	<resultMap type="student" id="student_card_map">
+				<!-- 学生的信息 -->
+				<id  property="stuNo" column="stuNo"/>
+				<result property="stuName" column="stuName" />
+				<result property="stuAge" column="stuAge" />
+				<!-- 一对一时，对象成员使用 association映射;javaType指定该属性的类型-->
+				<association property="card" javaType="StudentCard" >
+						<id property="cardId" column="cardId"/>
+						<result property="cardInfo" column="cardInfo"/>
+				</association>
+	</resultMap>
+
+一对一：association
+    一对多：collection
+
+select  c.*,s.* from student s
+		inner join studentclass c 
+		on c.classid = s.classid
+		where c.classid = 1;
+
+（MyBatis:多对一，多对多的本质就是  一对多的变化）
+
+###### 日志
+
+a.Log4j:	log4j.jar (mybatis.zip中lib中包含此jar)
+b.开启日志，conf.xml
+
+​	
+
+	<settings>
+			<!-- 开启日志，并指定使用的具体日志 -->
+			<setting name="logImpl" value="LOG4J"/>
+	</settings>
+
+如果不指定，Mybatis就会根据以下顺序 寻找日志
+SLF4J →Apache Commons Logging →Log4j 2 → Log4j →JDK logging
+
+c.编写配置日志输出文件
+log4j.properties，内容
+log4j.rootLogger=DEBUG, stdout
+log4j.appender.stdout=org.apache.log4j.ConsoleAppender
+log4j.appender.stdout.layout=org.apache.log4j.PatternLayout
+log4j.appender.stdout.layout.ConversionPattern=%5p [%t] - %m%n
+
+日志级别：
+	DEBUG<INFO<WARN<ERROR
+如果设置为info，则只显示 info及以上级别的信息；
+建议：在开发时设置debug，在运行时设置为info或以上。
+
+
+
+
+可以通过日志信息，相信的阅读mybatis执行情况（ 观察mybatis实际执行sql语句 以及SQL中的参数 和返回结果）
+
+  
+
+###### 延迟加载（懒加载）：
+
+一对一、一对多、多对一、多对多
+一对多
+如果不采用延迟加载  （立即加载），查询时会将 一 和多 都查询，班级、班级中的所有学生。
+如果想要  暂时只查询1的一方，  而多的一方 先不查询 而是在需要的时候再去查询 -->延迟加载
+
+
+一对一：学生、学生证
+
+
+mybatis中使用延迟加载，需要先配置：
+	<settings>
+			<!-- 开启延迟加载 -->
+			<setting name="lazyLoadingEnabled" value="true"/>
+		<!-- 关闭立即加载 -->
+		<setting name="aggressiveLazyLoading" value="false"/>
+	</settings>
+
+延迟加载的步骤：先查班级，按需查询学生
+1.开启延迟加载conf.xml配置settings
+2.配置mapper.xml
+
+		班级mapper.xml
+	  		
+	
+	<resultMap type="studentClass" id="class_student_lazyLoad_map">
+			<!-- 因为 type的主类是班级，因此先配置班级的信息-->
+			<id  property="classId" column="classId"/>
+			<result  property="className" column="className"/>
+			<!-- 配置成员属性学生，一对多;属性类型：javaType，属性的元素类型ofType -->
+			<!-- 2222222再查班级对应的学生 -->
+			<collection property="students" ofType="student" select="org.lanqiao.mapper.StudentMapper.queryStudentsByClassId" column="classid">
+	
+			</collection>
+	</resultMap>
+	
+	  <select id="queryClassAndStudents"   resultMap="class_student_lazyLoad_map">
+	    select  c.* from studentclass c
+		</select>
+	
+		即查询 学生的sql是通过 select属性指定，并且通过column指定外键
+	学生mapper.xml
+	<!-- 一对多,延迟加载需要的： 查询班级中的所有学生 -->
+	<select id="queryStudentsByClassId" parameterType="int" resultType="student">
+		select * from student where classId = #{classId}
+	</select>
+
+
+
+通过debug可以发现， 如果程序只需要学生，则只向数据库发送了查询学生的SQL；当我们后续 需要用到学生证的时候，再第二次发送 查询学生证的SQL。
+
+> Q&A
+
+1.Mapper.xml和mapper.java 必须同时存在，不然会一直循环解析xml文件
+
+
+
+

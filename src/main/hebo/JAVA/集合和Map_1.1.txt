@@ -1,117 +1,82 @@
 
 笔记参考博客：https://www.cnblogs.com/lijingran/category/1195711.html
 
+集合里的元素对象实现Comparable接口，Collections.sort就有足够的信息进行排序了，也无需额外提供比较器Comparator
 
-实现Comparable接口
-在类里面提供比较算法
-Collections.sort就有足够的信息进行排序了，也无需额外提供比较器Comparator
+#### Collection
 
-Collection是 Set List Queue和 Deque的接口
+Collection是 Set List Queue 的接口
+
+`List`容器的特点是智能数组式的，可随机访问（下标访问），容量可自由伸缩；`Queue`容器的特点是`队头出队`、`队尾入队`，一般队中间的元素不对外展示；`Map`容器的特点是存放`key-value`形式的数据；`Set`容器的主要特点是容器中存放的元素能保持唯一性。
 
 
-Set中的元素
 
-重复判断标准是:
-如果hashcode相同，再比较equals，如果equals相同，则是相同数据，否则是不同数据
-如果hashcode不一样，就是在不同的坑里，一定是不重复的
-如果hashcode一样，就是在同一个坑里，还需要进行equals比较
-如果equals一样，则是重复数据
-如果equals不一样，则是不同数据。
-HashSet是作为Map的key而存在的
+##### Set
 
-HashSet自身并没有独立的实现，而是在里面封装了一个Map.
-HashSet是作为Map的key而存在的
-而value是一个命名为PRESENT的static的Object对象，因为是一个类属性
+重复判断标准是:如果hashcode相同，再比较equals，如果equals相同，则是相同数据，否则是不同数据，如果hashcode不一样，就是在不同的坑里，一定是不重复的。如果hashcode一样，就是在同一个坑里，还需要进行equals比较，如果equals一样，则是重复数据，如果equals不一样，则是不同数据。
+           HashSet自身并没有独立的实现，而是在里面封装了一个Map.HashSet是作为Map的key而存在的，而value是一个命名为PRESENT的static的Object对象，因为是一个类属性
 
 HashSet： 无序
 LinkedHashSet： 按照插入顺序
 TreeSet： 从小到大排序
 
+##### ArrayList
 
-遍历HashMap几种方式
-entrySet  keySet
-HashMap和Hashtable都实现了Map接口，都是键值对保存数据的方式
-区别1：
-HashMap可以存放 null。所以当有其它线程改变了HashMap的结构（增加或者移除元素），将会抛出ConcurrentModificationException，但迭代器本身的remove()方法移除元素则不会抛出。
-Hashtable不能存放null
-区别2：
-HashMap不是线程安全的类 可以用 Collections的synchronizedMap方法使HashMap具有同步的能力，或者使用ConcurrentHashMap（它是HashTable的替代）。
-Hashtable是线程安全的类
-
-LinkedHashMap 是HashMap的一个子类，保存了记录的插入顺序。遍历速度只和实际数据有关，和容量无关
-如果您要按自然顺序或自定义顺序遍历键，那么TreeMap会更好
-
-ArrayList
 容器的容量"capacity"会随着对象的增加，自动增长
-add 有两种用法
-第一种是直接add对象，把对象加在最后面
-第二种是在指定位置加对象
-indexOf与contains一样，判断标准是对象是否相同、
-remove
-set用于替换指定位置的元素
-toArray可以把一个ArrayList对象转换为数组。
-clear 清空一个ArrayList
+add 有两种用法，第一种是直接add对象，把对象加在最后面，第二种是在指定位置加对象
+indexOf与contains一样，判断标准是对象是否相同、set用于替换指定位置的元素
+toArray可以把一个ArrayList对象转换为数组。clear 清空一个ArrayList
 
+###### Vector
+
+`Vector`容器底层同样是通过数组来实现，与`ArrayList`容器没啥区别。但是`Vector`容器的方法都加上了`synchronized`关键字，也就说`Vector`容器支持并发读写，锁为`this对象`，即整个容器。
+
+##### LinkedList
 
 除了实现了List接口外，LinkedList还实现了双向链表结构Deque，可以很方便的在头尾 插入 查看 删除 数据
-addLast
-addFirst
-getFirst
-removeLas
+
 LinkedList 除了实现了List和Deque外，还实现了Queue接口(队列)。
-Queue是先进先出队列 FIFO，常用方法：
-offer 在最后添加元素
-poll 取出第一个元素
-peek 查看第一个元素
+Queue是先进先出队列 FIFO，常用方法：offer 在最后添加元素、poll 取出第一个元素、peek 查看第一个元素
 
-
-查找符合条件的对象：
-List的做法是对每一个进行挨个遍历
-HashMap比如要查找annie，首先计算"annie"的hashcode是1008，根据1008这个下标，到数组中进行定位，发现1008这个位置有两个英雄，那么就对两个英雄的名字进行逐一比较(equals)，因为此时需要比较的量就已经少很多了，很快也就可以找出目标英雄
-
-顺序表，链表，哈希表，二叉树
-
-1、List ，List<?> 与 List<Object> 有区别吗？
-List<Object>是集合类型的一种
-List 变量可以接受任何泛型的变量
-List<?> 是一个泛型，在没有赋值之前，是可以接受任何集合的赋值的
-
-2、List<? extends T> a ,可以把 a 及其 a 的子类赋给 a，从 a 里取的元素都会被强制转换为 T 类型，不过需要注意的是，不能向 a 添加任何除 null 外是元素。
-3、List<? super T> a ,可以把 a 及其 a 的父类赋给 a，从 a 里取的元素都会被强制转换为 Object 类型，不过需要注意的是，可以向 a 添加元素，但添加的只能是 T 及其子类元素。
-实际上在 Java 的泛型中，泛型只存在于源码中，在编译后的字节码中，泛型已经被替换为原生类型了，并且在相应的地方插入了强制转换的代码。
-
-1.数组转换为集合
-这个返回的 ArrayList 实际上是 Arrays 的一个内部类。该内部类也是十分简单，和真实的那个 ArrayList 没得比。而且这个假的 ArrayList 是直接 引用原数组的。
-List<String> list = new ArrayList<>(Arrays.asList(arr));
-2、集合转数组
-
-
-
-
-
-
-
-同步集合与并发集合
- hashmap 是非同步的，故在多线程中是线程不安全的，不过也可以使用 同步类来进行包装:
- 包装类Collections.synchronizedMap（）和Collections.synchronizedList（）提供了一个基本的有条件的线程安全的Map和List实现。
-
-   ConcurrentHashMap引入了分段的概念，所以它只有一部分被锁定才能提供线程安全性. 
-总而言之，ConcurrentHashMap仅锁定Map的某些部分，而Hashtable在执行迭代时锁定完整映射。 
-
-Iterator【单独的线程和索引表】 在工作的时候是不允许被迭代的对象被改变的。但你可以使用 Iterator 本身的方法 remove() 来删除对象，Iterator.remove() 方法会在删除当前迭代对象的同时维护索引的一致性。
-
-Java 子类实现父类已经实现的接口：反射时得到是当前类实现的接口。
-HashSet只是对HashMap的封装。LinkedHashMap继承自HashMap
-Set<Map.Entry> 是map的一个视图，通过entry迭代器实现遍历
-增强for循环也是迭代器（语法糖）
+查找符合条件的对象：List的做法是对每一个进行挨个遍历
 
 LinkedList容器通过维护一个双链表存放数据。【考虑空链，头或者尾】
 
+###### Queue
 
-hashtable和vector都要默认长度【初始化时】，其他的是在add时扩容【之前是空数组】。
-map一般扩容两倍，ArrayList扩容1.5倍，vector判断增加因子
+ `PriorityQueue`容器底层是通过`数组`来维护一个`堆结构`，并且这个`堆结构`通过`数组下标`在逻辑上成立，并没有物理实现。通过指定容器的比较器（或者将存储的类型实现`comparable`接口）可构建`小顶堆`（堆顶存放容器元素的最小值）、`大顶堆`（堆顶存放容器元素的最大值）。
 
- LinkedHashMap = HashMap + list。LinkedHashMap能按照插入的顺序给你输出，即一种Linked的状态
+`  ArrayDeque`容器是`双端队列`（`队头`、`队尾`都支持`入队`、`出队`操作，普通队列只支持`队头出队`，`队尾入队`）容器，底层通过`循环数组`实现。所谓的`循环数组`，就是当下标为-1时，跳转到数组的尾端，同样当下标为数组的长度时，跳转到下标0。
+
+
+
+
+
+#### [Map](https://hestyle.blog.csdn.net/article/details/105716606)
+
+###### Hashmap
+
+ Hashmap 是非同步的，故在多线程中是线程不安全的，不过也可以使用 同步类来进行包装:包装类Collections.synchronizedMap（）和Collections.synchronizedList（）提供了一个基本的有条件的线程安全的Map和List实现。
+
+​      HashMap可以存放 null。所以当有其它线程改变了HashMap的结构（增加或者移除元素），将会抛出ConcurrentModificationException，但迭代器本身的remove()方法移除元素则不会抛出。
+
+ Java中的`HashMap`底层使用一个Node  `table数组`存放节点，使用链表（`JDK 1.8`新增`红黑树`）解决`hash冲突`（多个元素的`hash值`散列到同一个`table[i]`中）的问题。
+
+key可能发生哈希碰撞，不同的值散列到同一个哈希桶，这时采用链表或者红黑树存储。如果该桶的元素超过了 TREEIFY_THRESHOLD，需要进行扩容或者转成红黑树。
+
+Node继承了Map.Entry。【hash，key，value，next】
+
+在遍历的时候entrySet() 方法被调用，内部类EntrySet extends AbstractSet<Map.Entry<K,V>>生成一个对象，然后调用iterator方法返回迭代器【增强for循环】。【内部类可以访问外部类的成员变量，expectedModCount会记录调用时的外部的修改次数，防止并发修改，调用迭代器自身的remove可以重置expectedModCount的值。】
+
+*常用方法*
+
+replaceAll(BiFunction)
+对Map中的每个key对应的元素执行Function操作，得到的结果替换原来的value
+
+merge(k,v,BiFunction)
+如果map中的key对应的value不存在或者为null，就将v放入k。否则就执行BiFunction，执行的结果如果不为null就和k关联
+
+
 
 hashmap
  // (n - 1) & hash的作用是获取hash桶对应的下标（table数组），效果等同于 hash % n(n 是 tab数组的长度)，
@@ -129,11 +94,144 @@ map是用于存储key-value的虚拟容器，按照key的hash值将节点散列�
 
 HashMap、LinkedHashMap、Hashtable、ConcurrentHashMap这四个都是通过table数组，并结合hash散列存放节点，前两者不支持并发读写，效率较高，后两者支持并发，并且ConcurrentHashMap的效率更高些。TreeMap容器通过红黑树存储key-value节点，节点按照key的大小排序，查找、插入比较高效，时间复杂度在O(log2n)级别。
 
+###### Hashtable
 
-HashSet集合是完全无序的（内部根据元素的hash值进行散列），LinkedHashSet是插入顺序，TreeSet是元素自身大小顺序。
+​      Hashtable是线程安全的类。Hashtable不能存放null
+
+###### LinkedHashMap
+
+  LinkedHashMap 是HashMap的一个子类，保存了记录的插入顺序。遍历速度只和实际数据有关，和容量无关
+如果您要按自然顺序或自定义顺序遍历键，那么TreeMap会更好。 LinkedHashMap = HashMap + list。LinkedHashMap能按照插入的顺序给你输出，即一种Linked的状态。。对外展示的是一个`双向链表`
+
+###### TreeMap
+
+`TreeMap`容器通过红黑树存储`key-value`节点，节点按照key的大小排序，查找、插入比较高效，时间复杂度在O(log2n)级别
+
+
+
+
+
+
+
+
+
+ 
+
+同步[集合](https://so.csdn.net/so/search?q=集合&spm=1001.2101.3001.7020)与并发集合都为多线程和并发提供了合适的线程安全的集合，不过并发集合的可扩展性更高。【锁分区，无锁方式】
+
+常见的并发集合：
+ConcurrentHashMap：线程安全的HashMap的实现，引入了分段的概念，所以它只有一部分被锁定才能提供线程安全性. 总而言之，ConcurrentHashMap仅锁定Map的某些部分，而Hashtable在执行迭代时锁定完整映射。 
+CopyOnWriteArrayList：线程安全且在读操作时无锁的ArrayList
+CopyOnWriteArraySet：基于CopyOnWriteArrayList，不添加重复元素
+ArrayBlockingQueue：基于数组、先进先出、线程安全，可实现指定时间的阻塞读写，并且容量可以限制
+LinkedBlockingQueue：基于链表实现，读写各用一把锁，在高并发读写操作都多的情况下，性能优于ArrayBlockingQueue
+
+参考：https://blog.csdn.net/qq_41855420/category_9904356.html
+
+顺序表，链表，哈希表，二叉树
+
+1、List ，List<?> 与 List<Object> 有区别吗？
+List<Object>是集合类型的一种
+List 变量可以接受任何泛型的变量
+List<?> 是一个泛型，在没有赋值之前，是可以接受任何集合的赋值的
+
+2、List<? extends T> a ,可以把 a 及其 a 的子类赋给 a，从 a 里取的元素都会被强制转换为 T 类型，不过需要注意的是，不能向 a 添加任何除 null 外是元素。
+3、List<? super T> a ,可以把 a 及其 a 的父类赋给 a，从 a 里取的元素都会被强制转换为 Object 类型，不过需要注意的是，可以向 a 添加元素，但添加的只能是 T 及其子类元素。
+实际上在 Java 的泛型中，泛型只存在于源码中，在编译后的字节码中，泛型已经被替换为原生类型了，并且在相应的地方插入了强制转换的代码。
+
+
+
+
+
+
+
+
+Iterator【单独的线程和索引表】 在工作的时候是不允许被迭代的对象被改变的。但你可以使用 Iterator 本身的方法 remove() 来删除对象，Iterator.remove() 方法会在删除当前迭代对象的同时维护索引的一致性。
+
+
+
+增强for循环也是迭代器（语法糖）
+
+
+
+hashtable和vector都要默认长度【初始化时】，其他的是在add时扩容【之前是空数组】。
+map一般扩容两倍，ArrayList扩容1.5倍，vector判断增加因子
+
 
 
 
 
 并发的HashMap为什么会引起死循环
 https://blog.csdn.net/zhuqiuhui/article/details/51849692?utm_medium=distribute.pc_relevant.none-task-blog-OPENSEARCH-4&depth_1-utm_source=distribute.pc_relevant.none-task-blog-OPENSEARCH-4
+
+
+
+
+
+##### 集合与并发
+
+ArrayList中无论add、remove、clear方法只要是涉及了改变ArrayList元素的个数的方法都会导致modCount的改变。所以我们这里可以初步判断由于expectedModCount 得值与modCount的改变不同步，导致两者之间不等从而产生fail-fast机制。
+
+1:下标越界问题
+
+    public boolean add(E e) {
+        ensureCapacityInternal(size + 1);  // 是否需要扩容
+        elementData[size++] = e;//赋值
+        return true;
+    }
+多个线程进入ensureCapacityInternal()并执行完毕,此时都不需要扩容,依次赋值时会size+1,所以从第二个开始的线程赋值时其下标很可能超过了容量值,赋值时就报错了
+       2:丢失数据
+elementData[size++] = e是先赋值再size+1,多线程运行到赋值还没+1时,size位置上被覆盖了多次,然后多次+1,size+1,+2等位置没赋值过,下次就直接从size+n开始赋值,看起来就add了null值一样,此时不会报错,因为add时没有null所以取出时没做考虑就可能报NullPointerException了
+
+
+
+ CopyOnWriteArrayList，发生修改时候做copy，新老版本分离，保证读的高性能，适用于以读为主，读操作远远大于写操作的场景中使用，比如缓存。而Collections.synchronizedList则可以用在CopyOnWriteArrayList不适用，但是有需要同步列表的地方， 读写操作都比较均匀的地方。
+
+
+
+
+
+###### 拓展
+
+使用EnumSet可以获取某个范围的枚举实例：
+EnumSet<EnumColor> partialSet = EnumSet.range(EnumColor.PINK, EnumColor.BLACK);
+System.out.println(partialSet);// [PINK, YELLOW, BLACK]
+
+
+
+EnumMap其实和HashMap差不多，不过使用EnumMap效率更高。
+EnumMap<EnumColor, String> errMsgMap = new EnumMap<EnumColor, String>(EnumColor.class);
+errMsgMap.put(EnumColor.GREEN, "2,4,6");
+errMsgMap.put(EnumColor.RED, "1,7");
+for (Map.Entry<EnumColor, String> entry : errMsgMap.entrySet()) {
+	System.out.println(entry.getValue() + " " + entry.getKey().name());
+}
+
+
+
+###### 集合的深拷贝通过流控制  
+
+```
+	public <T> List<T> deepCopy(List<T> src) throws IOException, ClassNotFoundException {  
+		// 将该对象序列化成流,因为写在流里的是对象的一个拷贝，而原对象仍然存在于JVM里面。所以利用这个特性可以实现对象的深拷贝
+	    ByteArrayOutputStream byteOut = new ByteArrayOutputStream();  
+	    ObjectOutputStream out = new ObjectOutputStream(byteOut);  
+	    out.writeObject(src);  
+	  
+	    ByteArrayInputStream byteIn = new ByteArrayInputStream(byteOut.toByteArray());  
+	    ObjectInputStream in = new ObjectInputStream(byteIn);  
+	    @SuppressWarnings("unchecked")  
+	    List<T> dest = (List<T>) in.readObject();  
+	    return dest;  
+	} 
+```
+
+
+
+
+
+###### [比较器接口](https://blog.csdn.net/qq_31635851/article/details/120269813)
+
+```
+
+```

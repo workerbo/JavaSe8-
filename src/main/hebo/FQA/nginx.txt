@@ -1,0 +1,2 @@
+设置开机自启动
+https://blog.csdn.net/wzhwei1987/article/details/83343049

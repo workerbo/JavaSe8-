@@ -1,6 +1,6 @@
 HAP3.x技术点解析
 
-freemark入门 : [https://www.hawu.me/coding/733](https://www.hawu.me/coding/733)
+
 
 技术栈：ssm+kendoUI
 
@@ -118,7 +118,7 @@ client list中的age和idle分别代表当前客户端已经连接的时间和�
 =====IOC
 
 
-启动器和默认配置，让springboot快速开发spring应用
+
 
 spring集成springmvc时web.xml需要配置tomcat容器启动spring的监听器和spring配置文件【扫描bean和注入、事务管理器bean】路径。dispatcherserlet配置以及springmvc的配置文件。
 
@@ -154,21 +154,14 @@ setter注入通过属性名。构造器注入通过索引和类型
 
 
 
-===动态代理
 
-jdk动态代理是对接口的实现类对象代理 。代理对象调用方法被invocationHandler的invoke方法拦截。【反射】
-
-cglib是通过继承目标类生成代理对象【会重写方法，和增加一个代理方法】，代理对象调用方法【方法中会调用拦截器（横切逻辑，和调用代理方法）】（fastclass机制）
 
 
 
 
 
 ```
-最后我们总结一下JDK动态代理和Gglib动态代理的区别：
-1.JDK动态代理是实现了被代理对象的接口，Cglib是继承了被代理对象。
-2.JDK和Cglib都是在运行期生成字节码，JDK是直接写Class字节码，Cglib使用ASM框架写Class字节码，Cglib代理实现更复杂，生成代理类比JDK效率低。
-3.JDK调用代理方法，是通过反射机制调用，Cglib是通过FastClass机制直接调用方法，Cglib执行效率更高。
+
 ```
 
 =====AOP
@@ -201,11 +194,7 @@ spring dao 统一的异常体系【统一的DAO接口类】、模板类【开闭
 
 数据的并发问题通过锁机制在一个事务操作相应数据的时候其他事务不能操作。
 
-脏读、不可重复读【行锁】、幻读【表锁】就不会出现【因为其他事务无法操作数据】
 
-数据库根据隔离性自动为SQL语句加锁【手动加锁也行】
-
-乐观锁通过版本号控制
 
 
 

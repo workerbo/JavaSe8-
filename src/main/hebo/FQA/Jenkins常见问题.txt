@@ -1,0 +1,26 @@
+ java -jar jenkins.war --help
+java -jar /root/project/jenkins/jenkins.war --httpPort=9988
+
+
+jenkins服务器配置访问应用服务器（publish over ssh）、gitlab服务器（API TOKEN）。
+方式：用户名密码   用户名私钥    API tocken
+采用ssh时，客户端携带私钥与服务器存的公钥比对。
+
+
+流程：
+hook触发Jenkins构建===认证从gitlab服务器获取到源码，编译项目====连接应用服务器，发送war包
+(或者Jenkins只触发应用程序的脚本，在应用服务器进行拉取，编译，运行)
+
+
+Jenkins从gitlab服务器获取到源码，编译打包后发送到应用服务器上。
+
+==========遇到问题列表
+Hook executed successfully but returned HTTP 403，
+1.我们须要进入jenkins 系统设置-Configure Global Security中，关闭（去掉勾选： 防止跨站点请求伪造）
+2.系统管理 -> 系统设置 -> 去掉 Enable authentication for ‘/project’ end-point
+
+
+publish over ssh  Source files：相对于workspace   romote directory ssh主机和这个拼接
+======插件列表
+Maven Integration plugin
+Deploy to container Plugin

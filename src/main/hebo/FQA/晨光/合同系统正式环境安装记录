@@ -1,0 +1,32 @@
+备忘： 
+1.docmentserver 8000端口  
+2.IE兼容插件    
+3.maven依赖包在dev  
+4.安装ftp客户端
+5.标密工具
+
+
+正式环境（10.133.99.130）
+环境依赖
+数据库
+maven  
+onlyoffice
+tomcat
+redis
+启动脚本？
+
+========
+Oracle
+hcm_dev/hcm_dev  
+表空间 ：HCM_DEV TEMP
+数据库名和实例名
+prod  HCBMPROD hcbmprod
+uat   UAT    uat
+
+
+环境变量失效问题
+数据备份和重导问题
+lov查询失效异常
+数据库连接失效问题
+
+网关问题  sso模式  兼容插件问题  正式环境开端口  

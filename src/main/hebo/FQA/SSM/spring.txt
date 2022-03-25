@@ -1,0 +1,141 @@
+=========spring系列
+上下文和bean工厂 是bean容器的实现
+applicationContext.xml在web.xml实例化（通过xml，注解、java配置多种方式提供元数据）
+Spring IoC容器管理一个或多个bean。这些bean是使用您提供给容器的配置元数据创建的（例如，以XML <bean/>定义的形式 ）。
+在容器本身内，这些bean定义表示为BeanDefinition 对象，还允许注册在容器外部（由用户）创建的现有对象
+命名和实例化bean
+依存关系
+DI存在两个主要变体：基于构造函数的依赖注入和基于Setter的依赖注入。
+将构造函数用于强制性依赖项，将setter方法或配置方法用于可选性依赖项是一个很好的经验法则。可以 在setter方法上使用@Required批注，以使该属性成为必需的依赖项
+Java SE可以说这是Java的核心。(主要部分)
+Java EE是一个抽象的规范。具体实现称为应用服务器
+将Spring视为一个集成平台，允许您使用所有JavaEE技术。
+
+
+
+Spring 5 中最重要改动是把反应式编程的思想应用到了框架的各个方面。Spring 5 的反应式编程以 Reactor 库为基础
+
+
+Spring的新Java配置支持中的主要工件是-带 @Configuration注释的类和-带@Bean注释的方法
+完整的@Configuration与“精简” @Bean模式
+参考：https://www.ibm.com/developerworks/cn/webservices/ws-springjava/index.html
+
+
+SpringEL使用#{}进行表达式的声明。通过运行期间执行的表达式将值装配到我们的属性或构造函数当中
+=============
+
+springMVC是基于servlet
+注解就是以AOP方式解析
+Spring MVC Framework提供了分离的Web应用程序开发方式。使用诸如Dispatcher Servlet，ModelAndView和View Resolver的简单概念，可以轻松开发Web应用程序。
+
+
+===============
+https://www.ibm.com/developerworks/cn/java/j-spring-boot-basics-perry/
+Spring和Spring MVC的问题在于所需的配置量。
+Spring Boot通过结合自动配置和启动器包解决了这个问题。（简化和整合）
+
+自动配置基于类路径中的 JAR 和定义 bean 的方式：
+如果您为 JPA bean 添加了 @Entity 注释，Spring Boot 会自动配置 JPA
+如果类路径中有 H2 数据库 JAR，而且您没有配置任何其他 DataSource bean，您的应用程序会自动配置一个内存型数据库。
+Spring Boot über JAR 
+shaded JAR 仅包含来自应用程序的所有依赖 JAR 的 .class 文件。
+
+
+spring-boot-autoconfigure.jar中的另一个重要文件是/META-INF/spring.factories。该文件列出了应该在EnableAutoConfiguration项下启用的所有自动配置类。像@ ConditionalOnClass，@ ConditionalOnMissingBean这样的注释有助于提供这些功能！
+
+自动配置类 （根据条件满足加载类里的组件bean，对应XML配置未见） 
+属性封装类（对应的者属性配置文件，可以修改默认值） @configProperties  @value
+
+
+Spring Boot自定义starters
+Spring Boot在启动时扫描项目所依赖的JAR包，寻找包含spring.factories文件的JAR包，
+然后读取spring.factories文件获取配置的自动配置类AutoConfiguration，
+然后将自动配置类下满足条件(@ConditionalOnXxx)的@Bean放入到Spring容器中(Spring Context)
+这样使用者就可以直接用来注入，因为该类已经在容器中了
+原文链接：https://blog.csdn.net/vbirdbest/article/details/79863883
+
+
+websocket  https://blog.csdn.net/u010889616/article/details/79592389
+springboot系列教程：https://blog.csdn.net/vbirdbest/category_9273563.html
+
+
+修改和扩展默认配置
+2）、在SpringBoot中会有非常多的xxxConﬁgurer帮助我们进行扩展配置
+ 
+ 3）、在SpringBoot中会有很多的xxxCustomizer帮助我们进行定制配置 
+Spring Boot 自动配置好了SpringMVC （WebMvcAutoConﬁguration）
+
+编写一个配置类（@Conﬁguration），是WebMvcConﬁgurerAdapter类型；不能标注@EnableWebMvc;
+既保留了所有的自动配置，也能用我们扩展的配置；
+
+
+
+
+
+
+.jar.original 是普通jar包，不包含依赖
+.jar 是可执行jar包，包含了pom中的所有依赖，可以直接用java -jar 命令执行
+如果是部署，就用.jar
+如果是给别的项目用，就要给.jar.original这个包
+=============
+单元测试
+https://www.cnblogs.com/one12138/p/11536492.html
+测试类和方法上使用 @DisplayName 设置的名称
+ @BeforeAll 和 @AfterAll ，它们定义了整个测试类在开始前以及结束时的操作，只能修饰静态方法
+ @BeforeEach 和 @AfterEach 所标注的方法会在每个测试用例方法开始前和结束时执行
+  @Disabled 注解，表明该测试方法处于不可用
+  内嵌测试类：@Nested
+
+
+ ===========
+ servelet容器与servelet
+ Java Web 应用是基于 Servlet 规范运转的
+ 真正管理 Servlet 的容器是 Context 容器，一个 Context 对应一个 Web 工程
+ 事实上 Servlet 从被 web.xml 中解析到完成初始化，这个过程非常复杂，中间有很多过程，包括各种容器状态的转化引起的监听事件的触发（观察者模式）
+Servlet 的确已经能够帮我们完成所有的工作了，但是现在的 web 应用很少有直接将交互全部页面都用 servlet 来实现，而是采用更加高效的 MVC 框架来实现。这些 MVC 框架基本的原理都是将所有的请求都映射到一个 Servlet，然后去实现 service 方法，这个方法也就是 MVC 框架的入口。Servlet 的确已经能够帮我们完成所有的工作了，但是现在的 web 应用很少有直接将交互全部页面都用 servlet 来实现，而是采用更加高效的 MVC 框架来实现。
+
+ UML类图
+ http://uml.org.cn/oobject/201104212.asp
+ ApplicationContext接口也继承了ResourceLoader接口，所以它的所有实现类都实现了ResourceLoader接口，都可以用来获取Resource。
+
+ ================
+ soupUI调试Rest web程序
+
+
+
+
+ ===========
+ REST
+ 消费者与服务提供商之间发生的这种对话称为内容协商。
+ accept头（预期返回类型）  content-type头（当前内容类型）  application / xml  application / json
+
+
+
+
+
+ 同步阻塞IO
+ Servelet容器和webFLux容器（增加吞吐量）
+
+ springboot
+ 指标
+ 健康检查
+ 外部化配置
+
+
+ spring restTemplate
+
+
+ 分布式系统
+ https://blog.csdn.net/zhangyufeijiangxi/article/details/78286364
+
+
+ rest和soap区别
+ 使用 HTTP 协议的 SOAP，由于其设计原则上并不像 REST 那样强调与 Web 的工作方式相一致，所以，基于 SOAP 应用很难充分发挥 HTTP 本身的缓存能力。需要理解当前的 SOAP 消息语义。
+ 典型的基于 SOAP 的 Web 服务以操作为中心，每个操作接受 XML 文档作为输入，提供 XML 文档作为输出。在本质上讲，它们是 RPC 风格的。而在遵循 REST 原则的 ROA 应用中，服务是以资源为中心的，对每个资源的操作都是标准化的 HTTP 方法。
+ rest更加易于扩展
+ RPC 即远程过程调用, 很简单的概念, 像调用本地服务(方法)一样调用服务器的服务(方法).
+
+彻底弄懂HTTP缓存机制及原理
+对于强制缓存，服务器通知浏览器一个缓存时间，在缓存时间内，下次请求，直接用缓存，不在时间内，执行比较缓存策略。
+对于比较缓存，将缓存信息中的Etag和Last-Modified通过请求发送给服务器，由服务器校验，返回304状态码时，浏览器直接使用缓存。
+ https://www.cnblogs.com/chenqf/p/6386163.html

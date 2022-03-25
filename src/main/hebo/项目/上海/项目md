@@ -1,0 +1,62 @@
+需要连接vpn
+git地址: http://172.16.10.140/
+账号:mdmcode
+密码:mdm123456
+
+需要在git上该账号 配置本地ssh key
+代码已经移交客户，具体开发分支需要咨询客户，建议基于master分支 开一个dev、uat、prod三个分支
+
+vpn  ：wangjing/3@axc53c    hande2 Hande#nD
+
+堡垒机：wangjing/ROkin@2020
+
+dev 环境已经不能用了，在本地配置uat数据库
+
+<Resource auth="Container" driverClassName="com.mysql.jdbc.Driver" url="jdbc:mysql://172.16.130.53:3306/hmdm3.0?useUnicode=true&amp;characterEncoding=UTF-8&amp;allowMultiQueries=true" name="jdbc/hmdm" type="javax.sql.DataSource" username="hmdm_uat" password="hmdm@uat123"/>
+
+
+
+分发并保存解析结果到数据库
+
+根据协议获取分发策略
+
+主数据分发定时JOB：DistributeMaterDataJob【已经没有使用】
+
+手动重推
+
+手动执行分发
+
+
+
+
+
+逻辑 ：在快码     CUX.DISTRIBUTE.MSG_FORMART  中选择维护简易json层级的分发系统名称，响应报文和发送报文按照NCC格式
+
+nccFieldCustom方法客制化了NCC字段的获取逻辑。
+
+pushNccByCompany实现了公司修改了利润中心字段之后向NCC重新推送人员和部门【NCC没有接我们的组织主数据下的公司分类，而人员和部门需要公司的利润中心】
+
+定时推送的逻辑：获取当前主数据类型下当前数据修改时间在推送时间之后的数据！
+
+```
+NCC系统对方系统向我们推送数据
+/api/public/hmdm/asset/operate
+[{"carnumber":"99989","assettype":"叉车","nccnumber":"NCC00255000","flag":"1"}]
+/api/public/hmdm/banklist/operate
+```
+
+失效和恢复根据单据id去赋值状态后保存实现
+
+客制化LOV带出
+
+分发配置
+
+新建了两张表：hmdm_api_call_cj_car，hmdm_api_call_cj_bank_list
+
+ curl -H "Content-Type: application/json" -X POST -d '{"usercode":"CJL","pwd":"a1234567"}'  http://172.16.8.144:9080/uapws/rest/user/login?uap_dataSource=NCC
+
+查询接口
+
+| XML  | http://mdmtest.rokin.cn:21002/hmdm/api/public/inquiry/xml |
+| ---- | --------------------------------------------------------- |
+|      |                                                           |

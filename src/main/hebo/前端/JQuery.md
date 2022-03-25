@@ -1,0 +1,1 @@
+1.JQuery对象中this指向本身，this[0]指向DOM元素。事件监听函数中this指的是调用的DOM元素本身。

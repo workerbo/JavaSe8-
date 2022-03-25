@@ -1,0 +1,112 @@
+1.Docker本身并不是容器，它是创建容器的工具，是应用容器引擎。
+docker安装
+https://blog.csdn.net/lyqhf153/article/details/79585976
+---
+docker port  容器id 命令来查看当前映射的端口配置
+容器有自己的内部网络和 IP 地址，可以使用 docker inspect + 容器ID 获取容器的具体信息。
+ 查看IP转发规则 iptables-save | grep docker
+在Windows宿主机中连接虚拟机中的Docker容器
+
+privileged被引入docker。
+使用该参数，container内的root拥有真正的root权限。
+
+
+注意配置时名称不能拼错
+**微服务单宿主机情况下通过docker部署mysql+springboot+nginx 前后端分离web项目**
+
+---
+
+流程更迭：
+
+第一阶段：以IDEA为开发工具，GitHUB代码管理，在本地打包上传到服务器，执行脚本，构建docker镜像，运行
+
+第二阶段：以IDEA为开发工具，GitHUb代码管理，在服务器上执行脚本（拉取代码，打包，构建docker镜像，运行）
+
+第三阶段：
+
+# ============================================
+工具的准备和说明
+
+终端工具：Xshell
+上传文件工具：yum install lrzsz -y
+#rz 就会打开本地选择文件对话框，选择文件，确定就可以上传到当前所在目录。
+如果覆盖原文件，执行：#rz -y
+解压rar工具：wget [https://www.rarlab.com/rar/rarlinux-x64-5.6.0.tar.gz](https://www.rarlab.com/rar/rarlinux-x64-5.6.0.tar.gz)
+保留原目录结构：unrar x
+安装环境：docker
+yum -y install docker
+参考文档：[https://blog.csdn.net/v2sking/article/details/81200767](https://blog.csdn.net/v2sking/article/details/81200767)
+更改时区：ln -sf /usr/share/zoneinfo/Asia/Shanghai /etc/localtime
+
+# =============================================
+mysql镜像的部署和数据库建立
+
+docker run --name mysql1 -v /my/custom:/etc/mysql/conf.d -e MYSQL_ROOT_PASSWORD=135505
+
+-p 3306:3306  -d mysql:5.7.4
+
+rz -y
+docker cp crm_db.sql mysql1:/tmp/
+docker exec -it mysql bash
+mysql -h localhost -u root -p
+drop database crm_db;
+create database crm_db DEFAULT CHARACTER SET utf8 COLLATE utf8_general_ci;
+use crm_db;
+source /tmp/crm_db.sql;
+show tables;
+
+强制删除所有：service docker stop
+
+    rm -rf /var/lib/docker
+
+# ===========================================
+springboot镜像的建立和运行
+
+clean package -X 注意POM检查
+准备DockerFile文件
+#!/bin/bash
+
+# This is crm deploy script.
+
+ 脚本名 spring-boot-deploy
+
+echo 'crm deploy start!'
+cd /opt/crm
+docker stop crm1
+docker rm crm1
+docker rmi crm:1.3
+echo 'crm:1.3 build image'
+docker build -t crm:1.3 .
+echo 'crm1 container run'
+docker run --name crm1 -p 8080:8080 -v /opt/crm/log:/opt/crm/log -t crm:1.3
+
+查看日志
+docker logs -f -t --tail 100 crm1
+
+部署redis
+docker pull redis
+docker run -p 6379:6379 -v $PWD/data:/data -d redis:latest redis-server --appendonly yes
+docker exec -it quizzical_kare redis-cli
+docker run -it --link quizzical_kare:redis --rm redis redis-cli -h redis -p 6379
+
+# ===========================================
+部署nginx web应用
+
+Anguar容器部署只需要把Angular构建的生产环境（例如：ng build -prod）产生的目录 dist 写入至一个静态服务器镜像（例如：Nginx），最后实例这个镜像。
+web_ng_deploy
+cd /root/
+rz -y
+unrar x dist.rar
+docker stop web
+docker rm web
+cd dist
+docker build -t crmweb:1.3 .
+docker run -d -p 80:80 --name web crmweb:1.3
+
+# ===========================================
+jenkins+docker自动交付，持续集成
+
+容器是Docker镜像的运行着的只读实例，更新容器仅仅需要更新镜像文件
+
+cnpm install @types/moment --save 安装第三方库声明文件
+参考：[https://yuzhiqiang.blog.csdn.net/article/details/71215232](https://yuzhiqiang.blog.csdn.net/article/details/71215232)

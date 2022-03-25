@@ -1,0 +1,36 @@
+1.linux开机自启动问题
+2.磁盘与文件管理问题
+3.Oracle数据库使用与备份
+4.环境  maven
+5.多个虚拟机问题   把应用分到不同机器上 
+*******Oracle使用流程   Git使用流程     HAP各个模块    Linux（常用命令和脚本化）     Maven      hap源码    
+
+
+=======信息
+Jenkins  admin/135505   .jenkins/workspace/hcm
+Oracle    hap_dev schema :hap_dev/hap_dev   sys/135505   (SID)MyORCL   (SERVER_NAME)oracle   安装的用户（linux安装要求）：oracle/oracle
+gitlab     root/Handhand135505
+配置文档：
+https://github.com/wpyuan/Deploy-the-development-environment-offline/blob/master/RedHat7%E7%A6%BB%E7%BA%BF%E9%83%A8%E7%BD%B2%E6%B5%8B%E8%AF%95%E7%8E%AF%E5%A2%83.md
+
+
+
+
+细节一定要弄清楚，不然一定会出错
+
+
+/usr/local/tomcat/apache-tomcat-8.5.33
+/root/project
+
+
+192.168.56.101 db.hzero.org
+192.168.56.101 redis.hzero.org
+192.168.56.101 dev.hzero.org
+
+
+计划表：
+1.算法视频+leetcode+牛客网 
+2.hap+hzero技术整理
+3.spring系列技术整理
+4.数据库知识整理
+5.编译原理、软件工程  JVM  

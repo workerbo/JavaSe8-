@@ -1,0 +1,14 @@
+查看Tomcat是否以关闭
+
+ps-ef|grep java
+
+
+mvn clean install -D maven.test.skip=true
+
+
+
+tomcat日志乱码（区分控制台idea显示和tomcat显示）
+https://blog.csdn.net/lk1822791193/article/details/88317140
+
+快速启动脚本
+/usr/src/tomcat8.5-8080/bin/shutdown.sh && /usr/src/tomcat8.5-8080/bin/startup.sh && tail -lf /usr/src/tomcat8.5-8080/logs/catalina.out

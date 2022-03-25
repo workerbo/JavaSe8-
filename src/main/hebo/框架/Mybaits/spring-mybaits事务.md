@@ -1,0 +1,20 @@
+
+
+
+
+因为Spring事务在没调用Mapper方法之前就需要开一个Connection，并设置事务不自动提交，那么transactionManager中自然要配置dataSource。那如果我们的Service没有用到Spring事务呢，难道就不需要获取数据库连接了吗？当然不是，此时通过SpringManagedTransaction调用org.springframework.jdbc.datasource.DataSourceUtils#getConnection#fetchConnection方法获取，并将dataSource作为参数传进去，实际上获取的Connection都是通过dataSource来获取的。
+
+Mybatis和Spring整合后SpringManagedTransaction和Spring的Transaction的关系：
+
+- 如果开启Spring事务，则先有Spring的Transaction，然后mybatis创建sqlSession时，会创建SpringManagedTransaction并加入sqlSession中，SpringManagedTransaction中的connection会从Spring的Transaction创建的Connection并放入ThreadLocal中获取
+- 如果没有开启Spring事务或者第一个方法没有事务后面的方法有事务，则SpringManagedTransaction创建Connection并放入ThreadLocal中
+
+```--
+Mapper【TransactionSynchronizationManager是否当前线程有缓存的sqlsession】---》SqlSessionFactory--》openSession---》openSessionFromDataSource---》获取事务并设置到执行器。
+```
+
+
+
+
+
+spring整合springJDBC，springJDBC是第一方框架，所以不需要太多整合。
