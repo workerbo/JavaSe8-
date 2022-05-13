@@ -251,3 +251,4 @@ JdbcTransaction主要维护了一个默认autoCommit为false的Connection对象�
 
 
 
+参考：各个模块的超链接是原文所在。

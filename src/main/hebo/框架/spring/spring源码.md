@@ -59,3 +59,17 @@ ApplicationEventMulticaster抽象类[事件源中publishEvent方法需要调用�
 
 属于事件广播器,它的作用是把Applicationcontext发布的Event广播给所有的监听器.
 
+
+
+
+
+
+
+`@DependsOn`注解主要用于指定当前bean所依赖的beans。任何被指定依赖的bean都由Spring保证在当前bean之前创建。在少数情况下，bean不是通过**属性**或**构造函数参数**显式依赖于另一个bean，但却需要要求另一个bean优先完成初始化，则可以使用`@DependsOn`这个注解。
+
+
+
+[Resource框架体系介绍](https://zhuanlan.zhihu.com/p/70460173)
+
+
+

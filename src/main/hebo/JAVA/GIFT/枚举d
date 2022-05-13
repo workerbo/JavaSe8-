@@ -1,0 +1,28 @@
+```
+public static void main(String[] args) {
+  //
+  boolean  result=  EnumSet.of(CarDealersSubType.SECOND_CAR_DEALER,CarDealersSubType.SECONDARY_DEALER,CarDealersSubType.FOURS_SHOP).contains(CarDealersSubType.valueOf("SECONDARY_DEALER"));
+  System.out.println(result);
+}
+
+true
+```
+
+
+
+```
+public enum CarDealersSubType {
+    COOPERATION_PLATFORM("COOPERATION_PLATFORM","合作平台"),
+    SP_CAR_DEALER("SP_CAR_DEALER","SP车商"),
+    FOURS_SHOP("FOURS_SHOP","4S店"),
+    SECONDARY_DEALER("SECONDARY_DEALER","二级经销商"),
+    SECOND_CAR_DEALER("SECOND_CAR_DEALER","二手车商")
+    ;
+    private  String code;
+    private String  msg;
+
+}
+```
+
+###### 枚举的实例化过程？
+

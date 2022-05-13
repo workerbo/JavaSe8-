@@ -61,8 +61,3 @@ SpringBoot推荐给容器中添加组件的方式；推荐使用全注解的方�
 
 
 
-## ImportBeanDefinitionRegistrar使用
-
-Spring官方通过ImportBeanDefinitionRegistrar实现了@Component、@Service等注解的动态注入机制。
-
-很多三方框架集成Spring的时候，都会通过该接口，实现扫描指定的类，然后注册到spring容器中。 比如Mybatis中的Mapper接口，springCloud中的FeignClient接口，都是通过该接口实现的自定义注册逻辑。

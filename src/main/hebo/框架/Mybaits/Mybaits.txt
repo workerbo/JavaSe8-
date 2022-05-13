@@ -277,8 +277,9 @@ mybatis中使用延迟加载，需要先配置：
 2.配置mapper.xml
 
 		班级mapper.xml
-	  		
-	
+
+
+​	
 	<resultMap type="studentClass" id="class_student_lazyLoad_map">
 			<!-- 因为 type的主类是班级，因此先配置班级的信息-->
 			<id  property="classId" column="classId"/>
@@ -309,6 +310,19 @@ mybatis中使用延迟加载，需要先配置：
 
 1.Mapper.xml和mapper.java 必须同时存在，不然会一直循环解析xml文件
 
+###### bind标签
 
+bind 标签可以通过 OGNL 表达式自定义一个上下文变量。
+
+比如，按照网站名称进行模糊查询，SQL 映射文件如下。
+
+```
+<select id="selectWebsite" resultType="net.biancheng.po.Website">    <bind name="pattern" value="'%'+_parameter+'%'" />    SELECT id,name,url,age,country    FROM website    WHERE name like #{pattern}</select>
+```
+
+bind 元素属性如下。
+
+- value：对应传入实体类的某个字段，可以进行字符串拼接等特殊处理。
+- name：给对应参数取的别名。
 
 
