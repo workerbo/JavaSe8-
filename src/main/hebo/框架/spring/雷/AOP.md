@@ -30,7 +30,7 @@
 
 1. @EnableAspectJAutoProxy：利用@EnableAspectJAutoProxy注解来开启AOP功能
    - @EnableAspectJAutoProxy 通过@Import(AspectJAutoProxyRegistrar.class  实现了ImportBeanDefinitionRegistrar接口。)给spring容器中导入了一个AnnotationAwareAspectJAutoProxyCreator。【beanDefinition】
-   - AnnotationAwareAspectJAutoProxyCreator【**翻译过来就叫注解装配模式的AspectJ切面自动代理创建器。**】实现了InstantiationAwareBeanPostProcessor。它可以拦截spring的Bean初始化(Initialization)前后和实例化(Initialization)前后。
+   - AnnotationAwareAspectJAutoProxyCreator实现了InstantiationAwareBeanPostProcessor。它可以拦截spring的Bean初始化(Initialization)前后和实例化(Initialization)前后。
 2. AnnotationAwareAspectJAutoProxyCreator的postProcessBeforeInstantiation(bean实例化前)：会通过调用isInfrastructureClass(beanClass)来判断 被拦截的类是否是基础类型的Advice、PointCut、Advisor、AopInfrastructureBean，或者是否是切面（@Aspect），若是则放入adviseBean集合。这里主要是用来处理我们的切面类。【标记组件类型】
 3. AnnotationAwareAspectJAutoProxyCreator的postProcessAfterInitialization（bean初始化后）：
    1. 首先找到被拦截的Bean的匹配的增强器（通知方法），这里有切入点表达式匹配的逻辑

@@ -20,3 +20,7 @@
 
 it\she\he  复数都是they
 
+all  they  【这的all是介词】
+
+
+

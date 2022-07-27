@@ -3,7 +3,7 @@ OAuth 是一个认证授权开放标准，允许用户让第三方应用访问�
 OAuth 2.0定义了四种授权方式。
 
 - 授权码模式（authorization code）【将获取授权码后请求token放在服务器上】
-- 简化模式（implicit）
+- 简化模式（implicit）【没有后端应用】
 - 密码模式（resource owner password credentials）
 - 客户端模式（client credentials）
 
@@ -160,3 +160,26 @@ SSO是Single Sign On的缩写，OAuth是Open Authority的缩写，这两者都�
 以上两者，你在业务系统中都没有账号和密码，账号密码是存放在登录中心或微信服务器中的，这就是所谓的使用令牌代替账号密码访问应用。
 
 SSO核心：1.一个全局的认证登陆系统，其他系统检测到未登录的时候带上回调URL去登陆中心，第一次登陆后将sso-token放在cookie中，放在缓存中，值为用户信息。同时根据返回的sso-token当前业务系统会请求登陆中心保存会话信息。其他系统登陆重定向到登陆中心会携带sso-token【单点认证中心是同一路径】。
+
+
+
+
+
+###### 主要对从用户发起获取token的请求（/oauth/token），到请求结束返回token中间经过的几个关键点进行说明。
+
+**获取access_token请求（/oauth/token）**
+
+请求所需参数：client_id、client_secret、grant_type、username、password
+
+```
+
+```
+
+**检查头肯是否有效请求（/oauth/check_token）**
+
+请求所需参数：token
+
+**刷新token请求（/oauth/token）**
+请求所需参数：grant_type、refresh_token、client_id、client_secret
+
+其中grant_type为固定值：grant_type=refresh_token

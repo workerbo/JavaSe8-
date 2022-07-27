@@ -87,7 +87,7 @@ public void refresh() {
         prepareRefresh();
         // 提取bean的配置信息并封装成BeanDefinition实例，然后将其添加到注册中心。注册中心是一个ConcurrentHashMap<String,BeanDefinition>类型，key为Bean的名字，value为BeanDefinition实例。
         ConfigurableListableBeanFactory beanFactory = obtainFreshBeanFactory();
-       //对beanFactory进行一些配置，注册一些BeanPostProcessor和一些特殊的Bean。
+       //对beanFactory进行一些配置，注册一些beanFactoryPostProcessor和一些特殊的Bean。
         prepareBeanFactory(beanFactory);
         
             //留给子类在BeanFactory准备工作完成后处理一些工作。

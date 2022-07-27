@@ -1,0 +1,1 @@
+Feign中，默认情况下，使用的是JDK1.8中的 HttpURLConnection 基础连接类。该类的内部，使用了JDK1.8自带的 HttpClient 请求客户端类去负责完成底层的socket流操作。另外，JDK1.8还提供了一个简单的长连接缓冲类 KeepAliveCache，实现HttpClient 请求客户端类的缓存和复用。

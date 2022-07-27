@@ -115,6 +115,11 @@ https://blog.csdn.net/canot/article/details/52798867
 
 在抽象类中植入接口 笛卡尔集【其实策略更强调的是行为的替换，其宿主类不能替换】
 
+在桥接模式中不仅Implementor具有变化（ConcreateImplementior），而且Abstraction也可以发生变化（RefinedAbstraction），而且两者的变化是完全独立的，RefinedAbstraction与ConcreateImplementior之间松散耦合，它们仅仅通过Abstraction与Implementor之间的关系联系起来。而在策略模式中，并不考虑Context的变化，只有算法的可替代性。
+
+
+
+
 > ###### 工厂方法模式
 
 简单工厂：一个类中方法根据传入字符返回匹配bean。将创建过程封装。

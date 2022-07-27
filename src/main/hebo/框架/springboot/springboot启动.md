@@ -23,9 +23,9 @@ springboot 主类启动
 
 2）、refreshContext(context);SpringBoot刷新IOC容器【创建IOC容器对象，并初始化容器，创建容器中的每一 
 
-个组件】；如果是web应用创建**AnnotationConfifigEmbeddedWebApplicationContext**，否则： 
+个组件】；如果是web应用创建**AnnotationConfigEmbeddedWebApplicationContext**，否则： 
 
-**AnnotationConfifigApplicationContext** 
+**AnnotationConfigApplicationContext** 
 
 1. 调用构造函数AnnotationConfigServletWebServerApplicationContext
 
